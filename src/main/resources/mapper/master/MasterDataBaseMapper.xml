@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.master.MasterDataBase">
+
+    <select id="emailChk" parameterType="String" resultType="int">
+        SELECT COUNT(*) as cnt FROM member_table WHERE email  = #{email}
+    </select>
+
+    <insert id="memberIns" parameterType="com.example.demo.api.member.vo.MemberInsParamVO">
+        INSERT INTO member_table(email, password, name, phone)
+        VALUES (#{email}, #{password}, #{name}, #{phone})
+    </insert>
+
+    <select id="memberAuth" parameterType="map" resultType="int">
+        SELECT EXISTS(
+                       SELECT * FROM member_table
+                       where email = #{email} and password = #{password}
+                   ) as t;
+    </select>
+
+    <select id="forgotPassword" parameterType="String" resultType="int">
+        SELECT EXISTS(
+            SELECT * FROM member_table
+            WHERE email = #{email} and phone = #{phone}
+                   ) as t;
+    </select>
+
+    <update id="updPw" parameterType="String">
+        UPDATE member_table
+        SET password = #{password}
+        WHERE email = #{email}
+    </update>
+
+    <select id="getPhotoList" resultType="map">
+        SELECT * FROM photo_table
+    </select>
+
+    <select id="getFeedList" resultType="com.example.demo.api.feed.vo.FeedResultVO">
+        SELECT * FROM feed_table
+    </select>
+
+    <select id="getCommentList" resultType="com.example.demo.api.feed.vo.CommentResultVO">
+        SELECT * FROM feed_comment
+    </select>
+
+    <insert id="commentIns" parameterType="com.example.demo.api.feed.vo.CommentResultVO">
+        INSERT INTO feed_comment(post_no, r_member_email, comment)
+        VALUES (#{postNo}, #{rMemberEmail}, #{comment})
+    </insert>
+
+    <delete id="commentDel" parameterType="com.example.demo.api.feed.vo.CommentResultVO">
+        DELETE FROM feed_comment WHERE auto_no = #{autoNo} AND post_no = #{postNo}
+    </delete>
+
+    <select id="getNewFeedList" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
+        SELECT p.id, p.title, p.content AS post_content, p.user_mail AS post_user_mail, p.created_at AS post_created_at,
+               p.image_path, sub.comments, sub.comment_count
+        FROM master.posts AS p
+                 LEFT JOIN (
+            SELECT post_id, CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id',id, 'user_mail', user_mail, 'created_at', created_at, 'content', content)), ']') AS comments, COUNT(*) AS comment_count
+            FROM master.comments
+            GROUP BY post_id
+        ) AS sub ON p.id = sub.post_id
+        GROUP BY p.id, p.title, post_content, post_user_mail, post_created_at, image_path, comments, comment_count
+        ORDER BY post_created_at DESC;
+    </select>
+
+    <insert id="addComment" parameterType="map">
+        INSERT INTO master.comments (post_id, content, created_at, user_mail)
+        VALUES (#{postId}, #{content}, now(), #{userMail});
+    </insert>
+
+    <delete id="delComment" parameterType="map">
+        DELETE FROM master.comments WHERE id = #{id} AND user_mail = #{userMail}
+    </delete>
+
+    <insert id="addPost" parameterType="map">
+        INSERT INTO master.posts (title, content, created_at, image_path, user_mail)
+        VALUES (#{title}, #{content}, now(), #{imagePath}, #{userMail})
+    </insert>
+
+    <delete id="delPost" parameterType="map">
+        delete from master.posts where id = #{postNo} AND user_mail = #{userMail}
+    </delete>
+
+</mapper>
