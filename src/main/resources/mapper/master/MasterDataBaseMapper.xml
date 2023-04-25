@@ -53,17 +53,42 @@
         DELETE FROM feed_comment WHERE auto_no = #{autoNo} AND post_no = #{postNo}
     </delete>
 
-    <select id="getNewFeedList" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
-        SELECT p.id, p.title, p.content AS post_content, p.user_mail AS post_user_mail, p.created_at AS post_created_at,
-               p.image_path, sub.comments, sub.comment_count
-        FROM master.posts AS p
-                 LEFT JOIN (
-            SELECT post_id, CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id',id, 'user_mail', user_mail, 'created_at', created_at, 'content', content)), ']') AS comments, COUNT(*) AS comment_count
-            FROM master.comments
-            GROUP BY post_id
-        ) AS sub ON p.id = sub.post_id
-        GROUP BY p.id, p.title, post_content, post_user_mail, post_created_at, image_path, comments, comment_count
-        ORDER BY post_created_at DESC;
+    <select id="getNewFeedList" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
+        SELECT
+            p.id,
+            p.title,
+            p.content AS post_content,
+            p.user_mail AS post_user_mail,
+            p.created_at AS post_created_at,
+            p.image_path,
+            sub.comments,
+            sub.comment_count,
+            COUNT(l.post_id) AS like_count,
+            IF(SUM(CASE WHEN l.user_mail = #{userMail} THEN 1 ELSE 0 END) > 0, 1, 0) AS is_liked
+        FROM
+            master.posts AS p
+                LEFT JOIN (
+                SELECT
+                    post_id,
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', id, 'user_mail', user_mail, 'created_at', created_at, 'content', content)), ']') AS comments,
+                    COUNT(*) AS comment_count
+                FROM
+                    master.comments
+                GROUP BY
+                    post_id
+            ) AS sub ON p.id = sub.post_id
+                LEFT JOIN master.likes AS l ON p.id = l.post_id
+        GROUP BY
+            p.id,
+            p.title,
+            post_content,
+            post_user_mail,
+            post_created_at,
+            image_path,
+            comments,
+            comment_count
+        ORDER BY
+            post_created_at DESC;
     </select>
 
     <insert id="addComment" parameterType="map">
@@ -82,6 +107,15 @@
 
     <delete id="delPost" parameterType="map">
         delete from master.posts where id = #{postNo} AND user_mail = #{userMail}
+    </delete>
+
+    <insert id="likeIns" parameterType="map">
+        INSERT INTO master.likes(post_id, user_mail, created_at)
+        VALUES (#{postNo}, #{userMail}, now())
+    </insert>
+
+    <delete id="likeDel" parameterType="map">
+        DELETE FROM master.likes WHERE post_id = #{postNo} AND user_mail = #{userMail}
     </delete>
 
 </mapper>

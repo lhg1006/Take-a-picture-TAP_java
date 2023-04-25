@@ -13,8 +13,8 @@ public class NewFeedAction {
     private final NewFeedService newFeedService;
 
     @GetMapping("/list")
-    public Map<String, Object> newFeedList(){
-        return newFeedService.getNewFeedList();
+    public Map<String, Object> newFeedList(@RequestParam("userMail") String userMail){
+        return newFeedService.getNewFeedList(userMail);
     }
 
     @PostMapping("/addComment")
@@ -33,5 +33,13 @@ public class NewFeedAction {
     @PostMapping("/delPost")
     public int delPost(@RequestBody Map<String,Object> param){
         return newFeedService.delPost(param);
+    }
+    @PostMapping("/likeIns")
+    public int likeIns(@RequestBody Map<String,Object> param){
+        return newFeedService.likeIns(param);
+    }
+    @PostMapping("/likeDel")
+    public int LikeDel(@RequestBody Map<String,Object> param){
+        return newFeedService.likeDel(param);
     }
 }

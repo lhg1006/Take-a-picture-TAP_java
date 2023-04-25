@@ -32,7 +32,7 @@ public interface MasterDataBase {
 
 
 //여기서부터 뉴피드
-    List<NewFeedVO> getNewFeedList();
+    List<NewFeedVO> getNewFeedList(String userMail);
 
     int addComment(Map<String,Object> param);
 
@@ -41,4 +41,8 @@ public interface MasterDataBase {
     int addPost(Map<String,Object> param);
 
     int delPost(Map<String,Object> param);
+
+    int likeIns(Map<String,Object> param);
+
+    int likeDel(Map<String,Object> param);
 }

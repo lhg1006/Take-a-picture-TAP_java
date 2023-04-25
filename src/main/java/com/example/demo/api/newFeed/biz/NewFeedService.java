@@ -15,9 +15,9 @@ import java.util.Map;
 public class NewFeedService {
     private final MasterDataBase masterDataBase;
 
-    public Map<String, Object> getNewFeedList(){
+    public Map<String, Object> getNewFeedList(String userMail){
         Map<String, Object> resMap = new HashMap<>();
-        resMap.put("postList", masterDataBase.getNewFeedList());
+        resMap.put("postList", masterDataBase.getNewFeedList(userMail));
         return resMap;
     }
 
@@ -35,5 +35,13 @@ public class NewFeedService {
 
     public int delPost(Map<String, Object> param){
         return masterDataBase.delPost(param);
+    }
+
+    public int likeIns(Map<String, Object> param){
+        return masterDataBase.likeIns(param);
+    }
+
+    public int likeDel(Map<String, Object> param){
+        return masterDataBase.likeDel(param);
     }
 }
