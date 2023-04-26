@@ -1,9 +1,11 @@
 package com.example.demo.api.newFeed.act;
 
 import com.example.demo.api.newFeed.biz.NewFeedService;
+import com.example.demo.api.newFeed.vo.LikeVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -39,7 +41,11 @@ public class NewFeedAction {
         return newFeedService.likeIns(param);
     }
     @PostMapping("/likeDel")
-    public int LikeDel(@RequestBody Map<String,Object> param){
+    public int likeDel(@RequestBody Map<String,Object> param){
         return newFeedService.likeDel(param);
+    }
+    @GetMapping("/getLikeList")
+    public List<LikeVO> likeList(@RequestParam("postNo") int postNo){
+        return newFeedService.getLikeList(postNo);
     }
 }

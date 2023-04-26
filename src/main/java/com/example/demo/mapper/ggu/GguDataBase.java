@@ -1,18 +1,16 @@
-package com.example.demo.mapper.master;
+package com.example.demo.mapper.ggu;
 
 import com.example.demo.api.feed.vo.CommentResultVO;
 import com.example.demo.api.feed.vo.FeedResultVO;
 import com.example.demo.api.member.vo.MemberInsParamVO;
-import com.example.demo.api.newFeed.vo.NewFeedVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
+import com.example.demo.api.newFeed.vo.NewFeedVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
 
-
-public interface MasterDataBase {
-
+public interface GguDataBase {
     int emailChk(@Param("email") String email);
 
     int memberIns(MemberInsParamVO memberInsParamVO);
@@ -32,7 +30,7 @@ public interface MasterDataBase {
     int commentDel(CommentResultVO param);
 
 
-//여기서부터 뉴피드
+    //여기서부터 뉴피드
     List<NewFeedVO> getNewFeedList(String userMail);
 
     int addComment(Map<String,Object> param);

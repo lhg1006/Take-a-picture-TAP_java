@@ -1,57 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.demo.mapper.master.MasterDataBase">
-
+<mapper namespace="com.example.demo.mapper.ggu.GguDataBase">
     <select id="emailChk" parameterType="String" resultType="int">
-        SELECT COUNT(*) as cnt FROM member_table WHERE email  = #{email}
+        SELECT COUNT(*) as cnt FROM ggubabo.member_table WHERE email  = #{email}
     </select>
 
     <insert id="memberIns" parameterType="com.example.demo.api.member.vo.MemberInsParamVO">
-        INSERT INTO member_table(email, password, name, phone)
+        INSERT INTO ggubabo.member_table(email, password, name, phone)
         VALUES (#{email}, #{password}, #{name}, #{phone})
     </insert>
 
     <select id="memberAuth" parameterType="map" resultType="int">
         SELECT EXISTS(
-                       SELECT * FROM member_table
-                       where email = #{email} and password = #{password}
-                   ) as t;
+            SELECT * FROM ggubabo.member_table
+            where email = #{email} and password = #{password}
+        ) as t;
     </select>
 
     <select id="forgotPassword" parameterType="String" resultType="int">
         SELECT EXISTS(
-            SELECT * FROM member_table
+            SELECT * FROM ggubabo.member_table
             WHERE email = #{email} and phone = #{phone}
-                   ) as t;
+        ) as t;
     </select>
 
     <update id="updPw" parameterType="String">
-        UPDATE member_table
+        UPDATE ggubabo.member_table
         SET password = #{password}
         WHERE email = #{email}
     </update>
-
-    <select id="getPhotoList" resultType="map">
-        SELECT * FROM photo_table
-    </select>
-
-    <select id="getFeedList" resultType="com.example.demo.api.feed.vo.FeedResultVO">
-        SELECT * FROM feed_table
-    </select>
-
-    <select id="getCommentList" resultType="com.example.demo.api.feed.vo.CommentResultVO">
-        SELECT * FROM feed_comment
-    </select>
-
-    <insert id="commentIns" parameterType="com.example.demo.api.feed.vo.CommentResultVO">
-        INSERT INTO feed_comment(post_no, r_member_email, comment)
-        VALUES (#{postNo}, #{rMemberEmail}, #{comment})
-    </insert>
-
-    <delete id="commentDel" parameterType="com.example.demo.api.feed.vo.CommentResultVO">
-        DELETE FROM feed_comment WHERE auto_no = #{autoNo} AND post_no = #{postNo}
-    </delete>
 
     <select id="getNewFeedList" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
         SELECT
@@ -64,20 +42,23 @@
             sub.comments,
             sub.comment_count,
             COUNT(l.post_id) AS like_count,
-            IF(SUM(CASE WHEN l.user_mail = #{userMail} THEN 1 ELSE 0 END) > 0, 1, 0) AS is_liked
+            MAX(IF(l.user_mail = #{userMail}, 1, 0)) AS is_liked,
+            IF(m.profile_img IS NULL, '', m.profile_img) AS profile_img
         FROM
-            master.posts AS p
+            ggubabo.posts AS p
                 LEFT JOIN (
                 SELECT
                     post_id,
-                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', id, 'user_mail', user_mail, 'created_at', created_at, 'content', content)), ']') AS comments,
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', c.id, 'user_mail', c.user_mail, 'created_at', c.created_at, 'content', c.content, 'profile_img', IF(m.profile_img IS NULL, '', m.profile_img))), ']') AS comments,
                     COUNT(*) AS comment_count
                 FROM
-                    master.comments
+                    ggubabo.comments AS c
+                        LEFT JOIN ggubabo.member_table AS m ON c.user_mail = m.email
                 GROUP BY
                     post_id
             ) AS sub ON p.id = sub.post_id
-                LEFT JOIN master.likes AS l ON p.id = l.post_id
+                LEFT JOIN ggubabo.likes AS l ON p.id = l.post_id
+                LEFT JOIN ggubabo.member_table AS m ON p.user_mail = m.email
         GROUP BY
             p.id,
             p.title,
@@ -86,49 +67,49 @@
             post_created_at,
             image_path,
             comments,
-            comment_count
+            comment_count,
+            profile_img
         ORDER BY
             post_created_at DESC;
     </select>
 
     <insert id="addComment" parameterType="map">
-        INSERT INTO master.comments (post_id, content, created_at, user_mail)
+        INSERT INTO ggubabo.comments (post_id, content, created_at, user_mail)
         VALUES (#{postId}, #{content}, now(), #{userMail});
     </insert>
 
     <delete id="delComment" parameterType="map">
-        DELETE FROM master.comments WHERE id = #{id} AND user_mail = #{userMail}
+        DELETE FROM ggubabo.comments WHERE id = #{id} AND user_mail = #{userMail}
     </delete>
 
     <insert id="addPost" parameterType="map">
-        INSERT INTO master.posts (title, content, created_at, image_path, user_mail)
+        INSERT INTO ggubabo.posts (title, content, created_at, image_path, user_mail)
         VALUES (#{title}, #{content}, now(), #{imagePath}, #{userMail})
     </insert>
 
     <delete id="delPost" parameterType="map">
-        delete from master.posts where id = #{postNo} AND user_mail = #{userMail}
+        delete from ggubabo.posts where id = #{postNo} AND user_mail = #{userMail}
     </delete>
 
     <insert id="likeIns" parameterType="map">
-        INSERT INTO master.likes(post_id, user_mail, created_at)
+        INSERT INTO ggubabo.likes(post_id, user_mail, created_at)
         VALUES (#{postNo}, #{userMail}, now())
     </insert>
 
     <delete id="likeDel" parameterType="map">
-        DELETE FROM master.likes WHERE post_id = #{postNo} AND user_mail = #{userMail}
+        DELETE FROM ggubabo.likes WHERE post_id = #{postNo} AND user_mail = #{userMail}
     </delete>
 
     <select id="likeList" parameterType="int" resultType="com.example.demo.api.newFeed.vo.LikeVO">
         SELECT l.*, m.profile_img, m.name
-        FROM master.likes l
-                 JOIN master.member_table m ON l.user_mail = m.email
+        FROM ggubabo.likes l
+                 JOIN ggubabo.member_table m ON l.user_mail = m.email
         WHERE l.post_id = #{postNo}
     </select>
 
     <update id="memberProfilePhotoIns" parameterType="map">
-        UPDATE master.member_table
+        UPDATE ggubabo.member_table
         SET profile_img = #{imagePath}
         WHERE email = #{userMail};
     </update>
-
 </mapper>

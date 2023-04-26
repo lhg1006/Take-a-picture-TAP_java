@@ -13,32 +13,33 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-
 @Configuration
-@MapperScan(value = "com.example.demo.mapper.master", sqlSessionFactoryRef = "masterSqlSessionFactory")
+@MapperScan(value = "com.example.demo.mapper.ggu", sqlSessionFactoryRef = "gguSqlSessionFactory")
 @EnableTransactionManagement
-public class MasterDataBaseConfig {
-    @Bean(name="masterDataSource")
-    @ConfigurationProperties(prefix = "spring.master.datasource")
-    public DataSource masterDataSource(){
+public class GguDataBaseConfig {
+    @Bean(name="gguDataSource")
+    @ConfigurationProperties(prefix = "spring.ggubabo.datasource")
+    public DataSource gguDataSource(){
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name="masterSqlSessionFactory")
-    public SqlSessionFactory masterSqlSessionFactory(@Qualifier("masterDataSource")DataSource masterDataSource,
+
+    @Bean(name="gguSqlSessionFactory")
+    public SqlSessionFactory gguSqlSessionFactory(@Qualifier("gguDataSource")DataSource gguDataSource,
                                                      ApplicationContext applicationContext) throws Exception{
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(masterDataSource);
+        sqlSessionFactoryBean.setDataSource(gguDataSource);
         sqlSessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis-config.xml"));
-        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/master/*.xml"));
+        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/ggu/*.xml"));
 
         return sqlSessionFactoryBean.getObject();
     }
 
-    @Bean(name="masterSqlSessionTemplate")
-    public SqlSessionTemplate masterSqlSessionTemplate(SqlSessionFactory masterSqlSessionFactory) throws Exception{
-        return new SqlSessionTemplate(masterSqlSessionFactory);
+
+    @Bean(name="gguSqlSessionTemplate")
+    public SqlSessionTemplate gguSqlSessionTemplate(SqlSessionFactory gguSqlSessionFactory) throws Exception{
+        return new SqlSessionTemplate(gguSqlSessionFactory);
     }
-
-
 }
+
+

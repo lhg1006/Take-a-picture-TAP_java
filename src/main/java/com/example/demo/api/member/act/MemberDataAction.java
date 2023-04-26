@@ -43,4 +43,10 @@ public class MemberDataAction {
     public int logout(HttpServletRequest req, HttpServletResponse res){
         return memberService.logout(req, res);
     }
+
+    @PostMapping("/api/member/profile/photoIns")
+    public int memberProfilePhotoIns(@RequestBody Map<String, Object> param){
+        return memberService.memberProfilePhotoIns(param);
+    }
+
 }

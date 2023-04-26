@@ -8,4 +8,5 @@ public class MemberDataListVO {
     private String password;
     private String name;
     private String phone;
+    private String profileImg;
 }
