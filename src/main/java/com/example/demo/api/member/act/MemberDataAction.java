@@ -2,11 +2,13 @@ package com.example.demo.api.member.act;
 
 import com.example.demo.api.member.biz.MemberService;
 import com.example.demo.api.member.vo.MemberInsParamVO;
+import com.example.demo.api.member.vo.MemberDataVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -48,5 +50,14 @@ public class MemberDataAction {
     public int memberProfilePhotoIns(@RequestBody Map<String, Object> param){
         return memberService.memberProfilePhotoIns(param);
     }
+    @GetMapping("/api/member/select/profile")
+    public MemberDataVO memberSelect(@RequestParam("email") String email){
+        return memberService.memberSelect(email);
+    }
+    @GetMapping("/api/member/select/myPage")
+    public Map<String, Object> myPageData(@RequestParam("email") String email){
+        return memberService.myPageData(email);
+    }
+
 
 }

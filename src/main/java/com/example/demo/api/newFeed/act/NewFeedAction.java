@@ -1,6 +1,7 @@
 package com.example.demo.api.newFeed.act;
 
 import com.example.demo.api.newFeed.biz.NewFeedService;
+import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +48,17 @@ public class NewFeedAction {
     @GetMapping("/getLikeList")
     public List<LikeVO> likeList(@RequestParam("postNo") int postNo){
         return newFeedService.getLikeList(postNo);
+    }
+    @GetMapping("/getFollowList")
+    public List<FollowsVO> followList(@RequestParam("email") String email){
+        return newFeedService.followList(email);
+    }
+    @PostMapping("/followIns")
+    public int addFollow(@RequestBody Map<String, Object> param){
+        return newFeedService.addFollow(param);
+    }
+    @PostMapping("/followDel")
+    public int delFollow(@RequestBody Map<String, Object> param){
+        return newFeedService.delFollow(param);
     }
 }

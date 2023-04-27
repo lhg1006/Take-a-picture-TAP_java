@@ -31,6 +31,18 @@
         WHERE email = #{email}
     </update>
 
+    <select id="memberProfile" parameterType="String" resultType="com.example.demo.api.member.vo.MemberDataVO">
+        SELECT * FROM member_table WHERE email = #{email}
+    </select>
+
+    <select id="memberPosts" parameterType="String" resultType="com.example.demo.api.member.vo.MemberPostsVO">
+        SELECT * FROM posts WHERE user_mail = #{email}
+    </select>
+
+    <select id="memberFollows" parameterType="String" resultType="com.example.demo.api.member.vo.MemberFollowsVO">
+        SELECT * FROM follows WHERE follower_email = #{email}
+    </select>
+
     <select id="getNewFeedList" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
         SELECT
             p.id,
@@ -112,4 +124,19 @@
         SET profile_img = #{imagePath}
         WHERE email = #{userMail};
     </update>
+
+    <select id="followList" resultType="com.example.demo.api.newFeed.vo.FollowsVO">
+        SELECT * FROM follows WHERE follower_email = #{email}
+    </select>
+
+    <insert id="addFollow">
+        INSERT INTO follows (follower_email, following_email)
+        VALUES (#{followerEmail}, #{followingEmail});
+    </insert>
+
+    <delete id="delFollow">
+        DELETE FROM follows
+        WHERE follower_email = #{followerEmail}
+          AND following_email = #{followingEmail};
+    </delete>
 </mapper>

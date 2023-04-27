@@ -1,15 +1,20 @@
 package com.example.demo.api.member.biz;
 
 import com.example.demo.api.common.CookieUtil;
+import com.example.demo.api.member.vo.MemberFollowsVO;
 import com.example.demo.api.member.vo.MemberInsParamVO;
+import com.example.demo.api.member.vo.MemberDataVO;
+import com.example.demo.api.member.vo.MemberPostsVO;
 import com.example.demo.mapper.ggu.GguDataBase;
-import com.example.demo.mapper.master.MasterDataBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -96,6 +101,51 @@ public class MemberService {
             log.error("MemberService memberProfilePhotoIns ERROR ===> ",e);
         }
         return result;
+    }
+
+    public MemberDataVO memberSelect(String email){
+        MemberDataVO result = new MemberDataVO();
+        try {
+            result = gguDataBase.memberProfile(email);
+        }catch (Exception e){
+            log.error("MemberService memberProfilePhotoIns ERROR ===> ",e);
+        }
+        return result;
+    }
+
+    public List<MemberPostsVO> memberPosts(String email){
+        List<MemberPostsVO> result = new ArrayList<>();
+        try {
+            result = gguDataBase.memberPosts(email);
+        }catch (Exception e){
+            log.error("MemberService memberPosts ERROR ===> ",e);
+        }
+        return result;
+    }
+
+    public List<MemberFollowsVO> memberFollows(String email){
+        List<MemberFollowsVO> result = new ArrayList<>();
+        try {
+            result = gguDataBase.memberFollows(email);
+        }catch (Exception e){
+            log.error("MemberService memberFollows ERROR ===> ", e);
+        }
+        return result;
+    }
+
+    public Map<String,Object> myPageData(String email){
+        Map<String, Object> resMap = new HashMap<>();
+        try {
+            MemberDataVO memberSelectVO = memberSelect(email);
+            List<MemberPostsVO> postList = memberPosts(email);
+            List<MemberFollowsVO> followList = memberFollows(email);
+            resMap.put("profile", memberSelectVO);
+            resMap.put("posts", postList);
+            resMap.put("follows", followList);
+        }catch (Exception e){
+            log.error("MemberService myPageData ERROR ===> ", e);
+        }
+        return resMap;
     }
 
 }

@@ -2,7 +2,11 @@ package com.example.demo.mapper.ggu;
 
 import com.example.demo.api.feed.vo.CommentResultVO;
 import com.example.demo.api.feed.vo.FeedResultVO;
+import com.example.demo.api.member.vo.MemberFollowsVO;
 import com.example.demo.api.member.vo.MemberInsParamVO;
+import com.example.demo.api.member.vo.MemberDataVO;
+import com.example.demo.api.member.vo.MemberPostsVO;
+import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
 import com.example.demo.api.newFeed.vo.NewFeedVO;
 import org.apache.ibatis.annotations.Param;
@@ -47,5 +51,17 @@ public interface GguDataBase {
 
     List<LikeVO> likeList(int postNo);
 
-    int memberProfilePhotoIns(Map<String, Object> param);
+    int memberProfilePhotoIns(Map<String,Object> param);
+
+    List<FollowsVO> followList(String email);
+
+    int addFollow(Map<String,Object> param);
+
+    int delFollow(Map<String,Object> param);
+
+    MemberDataVO memberProfile(String email);
+
+    List<MemberPostsVO> memberPosts(String email);
+
+    List<MemberFollowsVO> memberFollows(String email);
 }
