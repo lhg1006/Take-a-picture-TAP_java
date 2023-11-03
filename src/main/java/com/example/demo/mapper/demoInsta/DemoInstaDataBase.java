@@ -1,7 +1,7 @@
 package com.example.demo.mapper.demoInsta;
 
-import com.example.demo.api.feed.vo.CommentResultVO;
-import com.example.demo.api.feed.vo.FeedResultVO;
+import com.example.demo.api.newFeed.vo.CommentResultVO;
+import com.example.demo.api.newFeed.vo.FeedResultVO;
 import com.example.demo.api.member.vo.MemberFollowsVO;
 import com.example.demo.api.member.vo.MemberInsParamVO;
 import com.example.demo.api.member.vo.MemberDataVO;

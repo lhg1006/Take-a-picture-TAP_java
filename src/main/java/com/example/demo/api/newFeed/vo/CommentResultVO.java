@@ -1,4 +1,4 @@
-package com.example.demo.api.feed.vo;
+package com.example.demo.api.newFeed.vo;
 
 import lombok.Data;
 
