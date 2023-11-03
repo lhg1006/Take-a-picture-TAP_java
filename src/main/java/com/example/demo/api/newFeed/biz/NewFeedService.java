@@ -2,7 +2,7 @@ package com.example.demo.api.newFeed.biz;
 
 import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
-import com.example.demo.mapper.ggu.GguDataBase;
+import com.example.demo.mapper.demoInsta.DemoInstaDataBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,38 +16,38 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class NewFeedService {
-    private final GguDataBase gguDataBase;
+    private final DemoInstaDataBase demoInstaDataBase;
 
     public Map<String, Object> getNewFeedList(String userMail){
         Map<String, Object> resMap = new HashMap<>();
-        resMap.put("postList", gguDataBase.getNewFeedList(userMail));
+        resMap.put("postList", demoInstaDataBase.getNewFeedList(userMail));
         return resMap;
     }
 
     public int addComment(Map<String, Object> param){
-        return gguDataBase.addComment(param);
+        return demoInstaDataBase.addComment(param);
     }
 
     public int delComment(Map<String, Object> param){
-        return gguDataBase.delComment(param);
+        return demoInstaDataBase.delComment(param);
     }
 
     public int addPost(Map<String, Object> param){
-        return gguDataBase.addPost(param);
+        return demoInstaDataBase.addPost(param);
     }
 
     public int delPost(Map<String, Object> param){
-        return gguDataBase.delPost(param);
+        return demoInstaDataBase.delPost(param);
     }
 
     public int likeIns(Map<String, Object> param){
-        return gguDataBase.likeIns(param);
+        return demoInstaDataBase.likeIns(param);
     }
     public int likeDel(Map<String, Object> param){
-        return gguDataBase.likeDel(param);
+        return demoInstaDataBase.likeDel(param);
     }
     public List<LikeVO>getLikeList(int postNo){
-        List<LikeVO> list = gguDataBase.likeList(postNo);
+        List<LikeVO> list = demoInstaDataBase.likeList(postNo);
         return list;
     }
 
@@ -55,7 +55,7 @@ public class NewFeedService {
     public List<FollowsVO> followList(String email){
         List<FollowsVO> list = new ArrayList<>();
         try {
-            list = gguDataBase.followList(email);
+            list = demoInstaDataBase.followList(email);
         }catch (Exception e){
             log.error("NewFeedService followList ERROR ===> ", e);
         }
@@ -65,7 +65,7 @@ public class NewFeedService {
     public int addFollow(Map<String, Object> param){
         int result = 0;
         try {
-            result = gguDataBase.addFollow(param);
+            result = demoInstaDataBase.addFollow(param);
         }catch (Exception e){
             log.error("NewFeedService addFollow ERROR ===> ",e);
         }
@@ -75,7 +75,7 @@ public class NewFeedService {
     public int delFollow(Map<String, Object> param){
         int result = 0;
         try {
-            result = gguDataBase.delFollow(param);
+            result = demoInstaDataBase.delFollow(param);
         }catch (Exception e){
             log.error("NewFeedService delFollow ERROR ===> ",e);
         }

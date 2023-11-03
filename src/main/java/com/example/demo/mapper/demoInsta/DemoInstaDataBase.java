@@ -1,18 +1,20 @@
-package com.example.demo.mapper.master;
+package com.example.demo.mapper.demoInsta;
 
 import com.example.demo.api.feed.vo.CommentResultVO;
 import com.example.demo.api.feed.vo.FeedResultVO;
+import com.example.demo.api.member.vo.MemberFollowsVO;
 import com.example.demo.api.member.vo.MemberInsParamVO;
-import com.example.demo.api.newFeed.vo.NewFeedVO;
+import com.example.demo.api.member.vo.MemberDataVO;
+import com.example.demo.api.member.vo.MemberPostsVO;
+import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
+import com.example.demo.api.newFeed.vo.NewFeedVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
 
-
-public interface MasterDataBase {
-
+public interface DemoInstaDataBase {
     int emailChk(@Param("email") String email);
 
     int memberIns(MemberInsParamVO memberInsParamVO);
@@ -32,7 +34,7 @@ public interface MasterDataBase {
     int commentDel(CommentResultVO param);
 
 
-//여기서부터 뉴피드
+    //여기서부터 뉴피드
     List<NewFeedVO> getNewFeedList(String userMail);
 
     int addComment(Map<String,Object> param);
@@ -49,5 +51,17 @@ public interface MasterDataBase {
 
     List<LikeVO> likeList(int postNo);
 
-    int memberProfilePhotoIns(Map<String, Object> param);
+    int memberProfilePhotoIns(Map<String,Object> param);
+
+    List<FollowsVO> followList(String email);
+
+    int addFollow(Map<String,Object> param);
+
+    int delFollow(Map<String,Object> param);
+
+    MemberDataVO memberProfile(String email);
+
+    List<MemberPostsVO> memberPosts(String email);
+
+    List<MemberFollowsVO> memberFollows(String email);
 }

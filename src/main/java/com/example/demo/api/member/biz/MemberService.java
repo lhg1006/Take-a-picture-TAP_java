@@ -5,7 +5,7 @@ import com.example.demo.api.member.vo.MemberFollowsVO;
 import com.example.demo.api.member.vo.MemberInsParamVO;
 import com.example.demo.api.member.vo.MemberDataVO;
 import com.example.demo.api.member.vo.MemberPostsVO;
-import com.example.demo.mapper.ggu.GguDataBase;
+import com.example.demo.mapper.demoInsta.DemoInstaDataBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,8 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class MemberService {
-    private final GguDataBase gguDataBase;
     private final CookieUtil cookieUtil;
+    private final DemoInstaDataBase demoInstaDataBase;
 
     public int memberIns(MemberInsParamVO memberInsParamVO){
         int result = 0;
@@ -30,7 +30,7 @@ public class MemberService {
             String password = memberInsParamVO.getPassword();
             String chkPassword = memberInsParamVO.getChkPassword();
             if(password.equals(chkPassword)){
-                result = gguDataBase.memberIns(memberInsParamVO);
+                result = demoInstaDataBase.memberIns(memberInsParamVO);
             }else{
                 result = -2; // 비밀번호 불일치
             }
@@ -43,7 +43,7 @@ public class MemberService {
     public int emailChk(String email){
         int result = 0;
         try {
-            result = gguDataBase.emailChk(email);
+            result = demoInstaDataBase.emailChk(email);
         }catch (Exception e){
             log.error("MemberService emailChk ERROR ===> ", e);
         }
@@ -53,7 +53,7 @@ public class MemberService {
     public int loginAuth(Map<String, Object> param, HttpServletResponse httpServletResponse){
         int result = 0;
         try {
-            result = gguDataBase.memberAuth(param);
+            result = demoInstaDataBase.memberAuth(param);
             if(result == 1) {
                 cookieUtil.setCookie(httpServletResponse, param);
             }
@@ -66,7 +66,7 @@ public class MemberService {
     public int forgotPassword(String email, String phone){
         int result = 0;
         try {
-            result = gguDataBase.forgotPassword(email, phone);
+            result = demoInstaDataBase.forgotPassword(email, phone);
         }catch (Exception e){
             log.error("MemberService forgotPassword ERROR ===> ", e);
         }
@@ -76,7 +76,7 @@ public class MemberService {
     public int changePassword(Map<String,Object> param){
         int result = 0;
         try {
-            result = gguDataBase.updPw(param);
+            result = demoInstaDataBase.updPw(param);
         }catch (Exception e){
             log.error("MemberService changePassword ERROR ===> ", e);
         }
@@ -96,7 +96,7 @@ public class MemberService {
     public int memberProfilePhotoIns(Map<String, Object> param){
         int result = 0;
         try {
-            result = gguDataBase.memberProfilePhotoIns(param);
+            result = demoInstaDataBase.memberProfilePhotoIns(param);
         }catch (Exception e){
             log.error("MemberService memberProfilePhotoIns ERROR ===> ",e);
         }
@@ -106,7 +106,7 @@ public class MemberService {
     public MemberDataVO memberSelect(String email){
         MemberDataVO result = new MemberDataVO();
         try {
-            result = gguDataBase.memberProfile(email);
+            result = demoInstaDataBase.memberProfile(email);
         }catch (Exception e){
             log.error("MemberService memberProfilePhotoIns ERROR ===> ",e);
         }
@@ -116,7 +116,7 @@ public class MemberService {
     public List<MemberPostsVO> memberPosts(String email){
         List<MemberPostsVO> result = new ArrayList<>();
         try {
-            result = gguDataBase.memberPosts(email);
+            result = demoInstaDataBase.memberPosts(email);
         }catch (Exception e){
             log.error("MemberService memberPosts ERROR ===> ",e);
         }
@@ -126,7 +126,7 @@ public class MemberService {
     public List<MemberFollowsVO> memberFollows(String email){
         List<MemberFollowsVO> result = new ArrayList<>();
         try {
-            result = gguDataBase.memberFollows(email);
+            result = demoInstaDataBase.memberFollows(email);
         }catch (Exception e){
             log.error("MemberService memberFollows ERROR ===> ", e);
         }

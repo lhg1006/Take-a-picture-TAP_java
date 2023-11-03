@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.demo.mapper.ggu.GguDataBase">
+<mapper namespace="com.example.demo.mapper.demoInsta.DemoInstaDataBase">
     <select id="emailChk" parameterType="String" resultType="int">
-        SELECT COUNT(*) as cnt FROM ggubabo.member_table WHERE email  = #{email}
+        SELECT COUNT(*) as cnt FROM demo_insta.member WHERE email  = #{email}
     </select>
 
     <insert id="memberIns" parameterType="com.example.demo.api.member.vo.MemberInsParamVO">
-        INSERT INTO ggubabo.member_table(email, password, name, phone)
+        INSERT INTO demo_insta.member(email, password, name, phone)
         VALUES (#{email}, #{password}, #{name}, #{phone})
     </insert>
 
     <select id="memberAuth" parameterType="map" resultType="int">
         SELECT EXISTS(
-            SELECT * FROM ggubabo.member_table
+            SELECT * FROM demo_insta.member
             where email = #{email} and password = #{password}
         ) as t;
     </select>
 
     <select id="forgotPassword" parameterType="String" resultType="int">
         SELECT EXISTS(
-            SELECT * FROM ggubabo.member_table
+            SELECT * FROM demo_insta.member
             WHERE email = #{email} and phone = #{phone}
         ) as t;
     </select>
 
     <update id="updPw" parameterType="String">
-        UPDATE ggubabo.member_table
+        UPDATE demo_insta.member
         SET password = #{password}
         WHERE email = #{email}
     </update>
 
     <select id="memberProfile" parameterType="String" resultType="com.example.demo.api.member.vo.MemberDataVO">
-        SELECT * FROM member_table WHERE email = #{email}
+        SELECT * FROM demo_insta.member WHERE email = #{email}
     </select>
 
     <select id="memberPosts" parameterType="String" resultType="com.example.demo.api.member.vo.MemberPostsVO">
-        SELECT * FROM posts WHERE user_mail = #{email}
+        SELECT * FROM demo_insta.posts WHERE user_mail = #{email}
     </select>
 
-    <select id="memberFollows" parameterType="String" resultType="com.example.demo.api.member.vo.MemberFollowsVO">
-        SELECT * FROM follows WHERE follower_email = #{email}
-    </select>
+<!--    <select id="memberFollows" parameterType="String" resultType="com.example.demo.api.member.vo.MemberFollowsVO">-->
+<!--        SELECT * FROM follows WHERE follower_email = #{email}-->
+<!--    </select>-->
 
     <select id="getNewFeedList" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
         SELECT
@@ -57,20 +57,20 @@
             MAX(IF(l.user_mail = #{userMail}, 1, 0)) AS is_liked,
             IF(m.profile_img IS NULL, '', m.profile_img) AS profile_img
         FROM
-            ggubabo.posts AS p
+            demo_insta.posts AS p
                 LEFT JOIN (
                 SELECT
                     post_id,
                     CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', c.id, 'user_mail', c.user_mail, 'created_at', c.created_at, 'content', c.content, 'profile_img', IF(m.profile_img IS NULL, '', m.profile_img))), ']') AS comments,
                     COUNT(*) AS comment_count
                 FROM
-                    ggubabo.comments AS c
-                        LEFT JOIN ggubabo.member_table AS m ON c.user_mail = m.email
+                    demo_insta.comments AS c
+                        LEFT JOIN demo_insta.member AS m ON c.user_mail = m.email
                 GROUP BY
                     post_id
             ) AS sub ON p.id = sub.post_id
-                LEFT JOIN ggubabo.likes AS l ON p.id = l.post_id
-                LEFT JOIN ggubabo.member_table AS m ON p.user_mail = m.email
+                LEFT JOIN demo_insta.likes AS l ON p.id = l.post_id
+                LEFT JOIN demo_insta.member AS m ON p.user_mail = m.email
         GROUP BY
             p.id,
             p.title,
@@ -86,57 +86,57 @@
     </select>
 
     <insert id="addComment" parameterType="map">
-        INSERT INTO ggubabo.comments (post_id, content, created_at, user_mail)
+        INSERT INTO demo_insta.comments (post_id, content, created_at, user_mail)
         VALUES (#{postId}, #{content}, now(), #{userMail});
     </insert>
 
     <delete id="delComment" parameterType="map">
-        DELETE FROM ggubabo.comments WHERE id = #{id} AND user_mail = #{userMail}
+        DELETE FROM demo_insta.comments WHERE id = #{id} AND user_mail = #{userMail}
     </delete>
 
     <insert id="addPost" parameterType="map">
-        INSERT INTO ggubabo.posts (title, content, created_at, image_path, user_mail)
+        INSERT INTO demo_insta.posts (title, content, created_at, image_path, user_mail)
         VALUES (#{title}, #{content}, now(), #{imagePath}, #{userMail})
     </insert>
 
     <delete id="delPost" parameterType="map">
-        delete from ggubabo.posts where id = #{postNo} AND user_mail = #{userMail}
+        delete from demo_insta.posts where id = #{postNo} AND user_mail = #{userMail}
     </delete>
 
     <insert id="likeIns" parameterType="map">
-        INSERT INTO ggubabo.likes(post_id, user_mail, created_at)
+        INSERT INTO demo_insta.likes(post_id, user_mail, created_at)
         VALUES (#{postNo}, #{userMail}, now())
     </insert>
 
     <delete id="likeDel" parameterType="map">
-        DELETE FROM ggubabo.likes WHERE post_id = #{postNo} AND user_mail = #{userMail}
+        DELETE FROM demo_insta.likes WHERE post_id = #{postNo} AND user_mail = #{userMail}
     </delete>
 
     <select id="likeList" parameterType="int" resultType="com.example.demo.api.newFeed.vo.LikeVO">
         SELECT l.*, m.profile_img, m.name
-        FROM ggubabo.likes l
-                 JOIN ggubabo.member_table m ON l.user_mail = m.email
+        FROM demo_insta.likes l
+                 JOIN demo_insta.member m ON l.user_mail = m.email
         WHERE l.post_id = #{postNo}
     </select>
 
     <update id="memberProfilePhotoIns" parameterType="map">
-        UPDATE ggubabo.member_table
+        UPDATE demo_insta.member
         SET profile_img = #{imagePath}
         WHERE email = #{userMail};
     </update>
 
-    <select id="followList" resultType="com.example.demo.api.newFeed.vo.FollowsVO">
-        SELECT * FROM follows WHERE follower_email = #{email}
-    </select>
+<!--    <select id="followList" resultType="com.example.demo.api.newFeed.vo.FollowsVO">-->
+<!--        SELECT * FROM follows WHERE follower_email = #{email}-->
+<!--    </select>-->
 
-    <insert id="addFollow">
-        INSERT INTO follows (follower_email, following_email)
-        VALUES (#{followerEmail}, #{followingEmail});
-    </insert>
+<!--    <insert id="addFollow">-->
+<!--        INSERT INTO follows (follower_email, following_email)-->
+<!--        VALUES (#{followerEmail}, #{followingEmail});-->
+<!--    </insert>-->
 
-    <delete id="delFollow">
-        DELETE FROM follows
-        WHERE follower_email = #{followerEmail}
-          AND following_email = #{followingEmail};
-    </delete>
+<!--    <delete id="delFollow">-->
+<!--        DELETE FROM follows-->
+<!--        WHERE follower_email = #{followerEmail}-->
+<!--          AND following_email = #{followingEmail};-->
+<!--    </delete>-->
 </mapper>

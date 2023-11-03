@@ -5,9 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import lombok.Data;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class NewFeedVO {

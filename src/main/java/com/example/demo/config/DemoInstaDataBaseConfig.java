@@ -14,31 +14,31 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 @Configuration
-@MapperScan(value = "com.example.demo.mapper.ggu", sqlSessionFactoryRef = "gguSqlSessionFactory")
+@MapperScan(value = "com.example.demo.mapper.demoInsta", sqlSessionFactoryRef = "demoInstaSqlSessionFactory")
 @EnableTransactionManagement
-public class GguDataBaseConfig {
-    @Bean(name="gguDataSource")
-    @ConfigurationProperties(prefix = "spring.ggubabo.datasource")
+public class DemoInstaDataBaseConfig {
+    @Bean(name="demoInstaDataSource")
+    @ConfigurationProperties(prefix = "spring.demoinsta.datasource")
     public DataSource gguDataSource(){
         return DataSourceBuilder.create().build();
     }
 
 
-    @Bean(name="gguSqlSessionFactory")
-    public SqlSessionFactory gguSqlSessionFactory(@Qualifier("gguDataSource")DataSource gguDataSource,
-                                                     ApplicationContext applicationContext) throws Exception{
+    @Bean(name="demoInstaSqlSessionFactory")
+    public SqlSessionFactory demoInstaSqlSessionFactory(@Qualifier("demoInstaDataSource")DataSource demoInstaDataSource,
+                                                  ApplicationContext applicationContext) throws Exception{
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(gguDataSource);
+        sqlSessionFactoryBean.setDataSource(demoInstaDataSource);
         sqlSessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis-config.xml"));
-        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/ggu/*.xml"));
+        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/demoInsta/*.xml"));
 
         return sqlSessionFactoryBean.getObject();
     }
 
 
-    @Bean(name="gguSqlSessionTemplate")
-    public SqlSessionTemplate gguSqlSessionTemplate(SqlSessionFactory gguSqlSessionFactory) throws Exception{
-        return new SqlSessionTemplate(gguSqlSessionFactory);
+    @Bean(name="demoInstaSqlSessionTemplate")
+    public SqlSessionTemplate demoInstaSqlSessionTemplate(SqlSessionFactory demoInstaSqlSessionFactory) throws Exception{
+        return new SqlSessionTemplate(demoInstaSqlSessionFactory);
     }
 }
 
