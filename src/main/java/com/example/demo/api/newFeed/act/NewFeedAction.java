@@ -29,30 +29,37 @@ public class NewFeedAction {
     public int delComment(@RequestBody Map<String, Object> param){
         return newFeedService.delComment(param);
     }
+
     @PostMapping("/addPost")
     public int addPost(@RequestBody Map<String,Object> param){
         return newFeedService.addPost(param);
     }
+
     @PostMapping("/delPost")
     public int delPost(@RequestBody Map<String,Object> param){
         return newFeedService.delPost(param);
     }
+
     @PostMapping("/likeIns")
     public int likeIns(@RequestBody Map<String,Object> param){
         return newFeedService.likeIns(param);
     }
+
     @PostMapping("/likeDel")
     public int likeDel(@RequestBody Map<String,Object> param){
         return newFeedService.likeDel(param);
     }
+
     @GetMapping("/getLikeList")
     public List<LikeVO> likeList(@RequestParam("postNo") int postNo){
         return newFeedService.getLikeList(postNo);
     }
+
     @GetMapping("/getFollowList")
     public List<FollowsVO> followList(@RequestParam("email") String email){
         return newFeedService.followList(email);
     }
+
     @PostMapping("/followIns")
     public int addFollow(@RequestBody Map<String, Object> param){
         return newFeedService.addFollow(param);

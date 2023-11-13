@@ -39,10 +39,6 @@
         SELECT * FROM demo_insta.posts WHERE user_mail = #{email}
     </select>
 
-<!--    <select id="memberFollows" parameterType="String" resultType="com.example.demo.api.member.vo.MemberFollowsVO">-->
-<!--        SELECT * FROM follows WHERE follower_email = #{email}-->
-<!--    </select>-->
-
     <select id="getNewFeedList" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
         SELECT
             p.id,
@@ -125,14 +121,27 @@
         WHERE email = #{userMail};
     </update>
 
-<!--    <select id="followList" resultType="com.example.demo.api.newFeed.vo.FollowsVO">-->
-<!--        SELECT * FROM follows WHERE follower_email = #{email}-->
-<!--    </select>-->
+    <select id="followList" resultType="com.example.demo.api.newFeed.vo.FollowsVO">
+        SELECT * FROM demo_insta.followers WHERE follower_email = #{email}
+    </select>
 
-<!--    <insert id="addFollow">-->
-<!--        INSERT INTO follows (follower_email, following_email)-->
-<!--        VALUES (#{followerEmail}, #{followingEmail});-->
-<!--    </insert>-->
+    <select id="memberFollows" parameterType="String" resultType="com.example.demo.api.member.vo.MemberFollowsVO">
+        SELECT * FROM demo_insta.followers WHERE follower_email = #{email}
+    </select>
+
+    <insert id="addFollow">
+        <selectKey resultType="java.lang.Integer" keyProperty="result" order="AFTER">
+            <![CDATA[
+            <if test="followerEmail != null and !followerEmail.isEmpty() and userEmail != null and !userEmail.isEmpty()">
+                INSERT INTO demo_insta.followers (follower_email, user_email)
+                VALUES (
+                    #{followerEmail},
+                    #{userEmail}
+                );
+            </if>
+        ]]>
+        </selectKey>
+    </insert>
 
 <!--    <delete id="delFollow">-->
 <!--        DELETE FROM follows-->
