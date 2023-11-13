@@ -122,25 +122,35 @@
     </update>
 
     <select id="followList" resultType="com.example.demo.api.newFeed.vo.FollowsVO">
+        SELECT * FROM demo_insta.followers WHERE user_email = #{email}
+    </select>
+
+    <select id="followerList" resultType="com.example.demo.api.newFeed.vo.FollowsVO">
         SELECT * FROM demo_insta.followers WHERE follower_email = #{email}
     </select>
+
 
     <select id="memberFollows" parameterType="String" resultType="com.example.demo.api.member.vo.MemberFollowsVO">
-        SELECT * FROM demo_insta.followers WHERE follower_email = #{email}
+        SELECT * FROM demo_insta.followers WHERE user_email = #{email};
     </select>
 
-    <insert id="addFollow">
-        <selectKey resultType="java.lang.Integer" keyProperty="result" order="AFTER">
-            <![CDATA[
-            <if test="followerEmail != null and !followerEmail.isEmpty() and userEmail != null and !userEmail.isEmpty()">
-                INSERT INTO demo_insta.followers (follower_email, user_email)
-                VALUES (
-                    #{followerEmail},
-                    #{userEmail}
-                );
-            </if>
-        ]]>
-        </selectKey>
+    <select id="getFollowCnt" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM demo_insta.followers WHERE user_email = #{email};
+    </select>
+
+    <select id="getFollowerCnt" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM demo_insta.followers WHERE follower_email = #{email};
+    </select>
+
+    <select id="followCheck" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM demo_insta.followers
+        WHERE user_email = #{userEmail} AND follower_email = #{followerEmail};
+    </select>
+
+    <insert id="addFollow" parameterType="map">
+        INSERT INTO demo_insta.followers (follower_email, user_email, follow_time)
+        VALUES (#{followerEmail}, #{userEmail}, NOW())
     </insert>
 
 <!--    <delete id="delFollow">-->

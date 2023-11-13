@@ -139,6 +139,15 @@ public class MemberService {
             MemberDataVO memberSelectVO = memberSelect(email);
             List<MemberPostsVO> postList = memberPosts(email);
             List<MemberFollowsVO> followList = memberFollows(email);
+
+            int followCnt = 0;
+            int followerCnt = 0;
+            followCnt = demoInstaDataBase.getFollowCnt(email);
+            followerCnt = demoInstaDataBase.getFollowerCnt(email);
+
+            resMap.put("followCnt", followCnt);
+            resMap.put("followerCnt", followerCnt);
+
             resMap.put("profile", memberSelectVO);
             resMap.put("posts", postList);
             resMap.put("follows", followList);

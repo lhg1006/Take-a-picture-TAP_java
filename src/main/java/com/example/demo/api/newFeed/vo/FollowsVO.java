@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class FollowsVO {
+    private int followerAutoNo;
+    private String userEmail;
     private String followerEmail;
-    private String followingEmail;
-    private String followDate;
+    private String followTime;
 }

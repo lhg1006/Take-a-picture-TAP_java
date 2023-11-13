@@ -55,6 +55,9 @@ public interface DemoInstaDataBase {
 
     List<FollowsVO> followList(String email);
 
+    List<FollowsVO> followerList(String email);
+
+    int followCheck(Map<String,Object> param);
     int addFollow(Map<String,Object> param);
 
     int delFollow(Map<String,Object> param);
@@ -64,4 +67,7 @@ public interface DemoInstaDataBase {
     List<MemberPostsVO> memberPosts(String email);
 
     List<MemberFollowsVO> memberFollows(String email);
+
+    int getFollowCnt (String email);
+    int getFollowerCnt (String email);
 }

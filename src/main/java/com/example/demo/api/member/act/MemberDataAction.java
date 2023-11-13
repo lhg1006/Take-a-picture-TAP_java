@@ -54,6 +54,7 @@ public class MemberDataAction {
     public MemberDataVO memberSelect(@RequestParam("email") String email){
         return memberService.memberSelect(email);
     }
+
     @GetMapping("/api/member/select/userPage")
     public Map<String, Object> myPageData(@RequestParam("email") String email){
         return memberService.myPageData(email);

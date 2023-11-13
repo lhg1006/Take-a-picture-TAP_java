@@ -56,8 +56,8 @@ public class NewFeedAction {
     }
 
     @GetMapping("/getFollowList")
-    public List<FollowsVO> followList(@RequestParam("email") String email){
-        return newFeedService.followList(email);
+    public List<FollowsVO> followList(@RequestParam("email") String email, @RequestParam("type") String type){
+        return newFeedService.followList(email, type);
     }
 
     @PostMapping("/followIns")

@@ -52,10 +52,14 @@ public class NewFeedService {
     }
 
 
-    public List<FollowsVO> followList(String email){
+    public List<FollowsVO> followList(String email, String type){
         List<FollowsVO> list = new ArrayList<>();
         try {
-            list = demoInstaDataBase.followList(email);
+            if(type.equals("follow")){
+                list = demoInstaDataBase.followList(email);
+            }else{
+                list = demoInstaDataBase.followerList(email);
+            }
         }catch (Exception e){
             log.error("NewFeedService followList ERROR ===> ", e);
         }
@@ -65,7 +69,11 @@ public class NewFeedService {
     public int addFollow(Map<String, Object> param){
         int result = 0;
         try {
-            result = demoInstaDataBase.addFollow(param);
+            int chk = demoInstaDataBase.followCheck(param);
+
+            if(chk == 0){
+                result = demoInstaDataBase.addFollow(param);
+            }
         }catch (Exception e){
             log.error("NewFeedService addFollow ERROR ===> ",e);
         }

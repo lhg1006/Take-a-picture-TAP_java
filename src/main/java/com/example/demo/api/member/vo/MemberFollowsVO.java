@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class MemberFollowsVO {
+    private String userEmail;
     private String followerEmail;
-    private String followingEmail;
 }
