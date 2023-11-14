@@ -24,6 +24,13 @@ public class NewFeedService {
         return resMap;
     }
 
+    public Map<String, Object> getTargetFeedList(String userMail){
+        Map<String, Object> resMap = new HashMap<>();
+        resMap.put("postList", demoInstaDataBase.getTargetFeedList(userMail));
+        return resMap;
+    }
+
+
     public int addComment(Map<String, Object> param){
         return demoInstaDataBase.addComment(param);
     }

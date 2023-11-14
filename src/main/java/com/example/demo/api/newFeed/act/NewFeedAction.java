@@ -20,6 +20,11 @@ public class NewFeedAction {
         return newFeedService.getNewFeedList(userMail);
     }
 
+    @GetMapping("/list/target")
+    public Map<String, Object> targetFeedList(@RequestParam("userMail") String userMail){
+        return newFeedService.getTargetFeedList(userMail);
+    }
+
     @PostMapping("/addComment")
     public int addComment(@RequestBody Map<String, Object> param){
         return newFeedService.addComment(param);

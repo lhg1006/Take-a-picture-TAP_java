@@ -8,4 +8,5 @@ public class FollowsVO {
     private String userEmail;
     private String followerEmail;
     private String followTime;
+    private String profileImg;
 }

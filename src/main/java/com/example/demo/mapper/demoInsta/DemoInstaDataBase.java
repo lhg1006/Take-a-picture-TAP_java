@@ -37,6 +37,8 @@ public interface DemoInstaDataBase {
     //여기서부터 뉴피드
     List<NewFeedVO> getNewFeedList(String userMail);
 
+    List<NewFeedVO> getTargetFeedList(String userMail);
+
     int addComment(Map<String,Object> param);
 
     int delComment(Map<String,Object> param);
