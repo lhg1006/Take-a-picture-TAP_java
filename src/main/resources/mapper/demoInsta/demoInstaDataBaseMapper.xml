@@ -178,6 +178,10 @@
         WHERE demo_insta.followers.follower_email = #{email};
     </select>
 
+    <select id="isFollowed" resultType="int">
+        SELECT COUNT(*) FROM demo_insta.followers WHERE user_email = #{userEmail} and follower_email = #{followerEmail};
+    </select>
+
 
     <select id="memberFollows" parameterType="String" resultType="com.example.demo.api.member.vo.MemberFollowsVO">
         SELECT * FROM demo_insta.followers WHERE user_email = #{email};

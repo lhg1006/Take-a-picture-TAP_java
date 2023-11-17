@@ -72,4 +72,6 @@ public interface DemoInstaDataBase {
 
     int getFollowCnt (String email);
     int getFollowerCnt (String email);
+
+    int isFollowed (Map<String,Object> param);
 }

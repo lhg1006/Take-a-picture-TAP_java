@@ -69,8 +69,14 @@ public class NewFeedAction {
     public int addFollow(@RequestBody Map<String, Object> param){
         return newFeedService.addFollow(param);
     }
+
     @PostMapping("/followDel")
     public int delFollow(@RequestBody Map<String, Object> param){
         return newFeedService.delFollow(param);
+    }
+
+    @GetMapping("/isFollowed")
+    public int isFollowed(@RequestParam Map<String,Object> param){
+        return newFeedService.isFollowed(param);
     }
 }

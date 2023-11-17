@@ -96,4 +96,8 @@ public class NewFeedService {
         }
         return result;
     }
+
+    public int isFollowed(Map<String, Object> param){
+        return demoInstaDataBase.isFollowed(param);
+    }
 }
