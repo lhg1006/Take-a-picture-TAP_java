@@ -1,10 +1,7 @@
 package com.example.demo.api.member.biz;
 
 import com.example.demo.api.common.CookieUtil;
-import com.example.demo.api.member.vo.MemberFollowsVO;
-import com.example.demo.api.member.vo.MemberInsParamVO;
-import com.example.demo.api.member.vo.MemberDataVO;
-import com.example.demo.api.member.vo.MemberPostsVO;
+import com.example.demo.api.member.vo.*;
 import com.example.demo.mapper.demoInsta.DemoInstaDataBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,10 +50,14 @@ public class MemberService {
     public int loginAuth(Map<String, Object> param, HttpServletResponse httpServletResponse){
         int result = 0;
         try {
-            result = demoInstaDataBase.memberAuth(param);
-            if(result == 1) {
+            AuthVO authVO = demoInstaDataBase.memberAuth(param);
+
+            if(authVO.getExistsFlag() == 1) {
+                param.put("memberNo", authVO.getMemberNo());
                 cookieUtil.setCookie(httpServletResponse, param);
+                result = 1;
             }
+
         }catch (Exception e){
             log.error("MemberService loginAuth ERROR ===> ", e);
         }

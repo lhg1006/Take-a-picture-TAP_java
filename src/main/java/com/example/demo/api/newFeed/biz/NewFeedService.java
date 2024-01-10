@@ -1,11 +1,15 @@
 package com.example.demo.api.newFeed.biz;
 
+import com.example.demo.api.alim.biz.AlimService;
+import com.example.demo.api.alim.vo.AlimInsVO;
 import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
 import com.example.demo.mapper.demoInsta.DemoInstaDataBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NewFeedService {
     private final DemoInstaDataBase demoInstaDataBase;
+    private final AlimService alimService;
 
     public Map<String, Object> getNewFeedList(String userMail){
         Map<String, Object> resMap = new HashMap<>();
@@ -48,7 +53,33 @@ public class NewFeedService {
     }
 
     public int likeIns(Map<String, Object> param){
-        return demoInstaDataBase.likeIns(param);
+        int likeInsRes = 0;
+
+        if( ObjectUtils.isEmpty(param.get("myMemNo")) || ObjectUtils.isEmpty(param.get("postMemNo")) ) {
+            return likeInsRes;
+        }
+
+        int myNo = Integer.parseInt(param.get("myMemNo").toString()) ;
+        int yourNo = Integer.parseInt(param.get("postMemNo").toString());
+
+        int postNo = 0;
+
+        if( !ObjectUtils.isEmpty(param.get("postNo")) ){
+            postNo = Integer.parseInt(param.get("postNo").toString());
+        }
+
+        likeInsRes = demoInstaDataBase.likeIns(param);
+
+        if(likeInsRes > 0 && (myNo != yourNo)){
+            AlimInsVO alimInsVO = new AlimInsVO();
+            alimInsVO.setMyMemNo(myNo);
+            alimInsVO.setYourMemNo(yourNo);
+            alimInsVO.setAlimCode(1);
+            alimInsVO.setPostNo(postNo);
+
+            alimService.sendAlim(alimInsVO);
+        }
+        return likeInsRes;
     }
     public int likeDel(Map<String, Object> param){
         return demoInstaDataBase.likeDel(param);

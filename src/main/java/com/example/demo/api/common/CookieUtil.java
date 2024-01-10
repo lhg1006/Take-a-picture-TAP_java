@@ -11,12 +11,15 @@ import java.util.Map;
 public class CookieUtil {
 
     public void setCookie(HttpServletResponse res, Map<String,Object> param){
-        Cookie cookie = new Cookie("isLogin", "true");
-        cookie.setPath("/");
-        Cookie cookie1 = new Cookie("memberEmail", (String) param.get("email"));
-        cookie1.setPath("/");
-        res.addCookie(cookie);
-        res.addCookie(cookie1);
+        Cookie cookieLogin = new Cookie("isLogin", "true");
+        cookieLogin.setPath("/");
+        Cookie cookieEmail = new Cookie("memberEmail", (String) param.get("email"));
+        cookieEmail.setPath("/");
+        Cookie cookieMemNo = new Cookie("memberNo", (String) param.get("memberNo"));
+        cookieMemNo.setPath("/");
+        res.addCookie(cookieLogin);
+        res.addCookie(cookieEmail);
+        res.addCookie(cookieMemNo);
     }
 
     public String getCookie(HttpServletRequest req, String cookieName){

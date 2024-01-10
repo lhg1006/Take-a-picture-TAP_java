@@ -7,15 +7,19 @@
     </select>
 
     <insert id="memberIns" parameterType="com.example.demo.api.member.vo.MemberInsParamVO">
-        INSERT INTO demo_insta.member(email, password, name, phone)
-        VALUES (#{email}, #{password}, #{name}, #{phone})
+        INSERT INTO demo_insta.member(email, password, name, phone, ins_date)
+        VALUES (#{email}, #{password}, #{name}, #{phone}, NOW())
     </insert>
 
-    <select id="memberAuth" parameterType="map" resultType="int">
-        SELECT EXISTS(
-            SELECT * FROM demo_insta.member
-            where email = #{email} and password = #{password}
-        ) as t;
+    <select id="memberAuth" parameterType="map" resultType="com.example.demo.api.member.vo.AuthVO">
+        SELECT
+            EXISTS (
+                SELECT * FROM demo_insta.member
+                WHERE email = #{email} AND password = #{password}
+            ) AS exists_flag,
+            member_no
+        FROM demo_insta.member
+        WHERE email = #{email} AND password = #{password};
     </select>
 
     <select id="forgotPassword" parameterType="String" resultType="int">
@@ -42,7 +46,7 @@
     <select id="getNewFeedList" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
         SELECT
             p.id,
-            p.title,
+            p.user_no AS post_user_no,
             p.content AS post_content,
             p.user_mail AS post_user_mail,
             p.created_at AS post_created_at,
@@ -69,7 +73,7 @@
                 LEFT JOIN demo_insta.member AS m ON p.user_mail = m.email
         GROUP BY
             p.id,
-            p.title,
+            p.user_no,
             post_content,
             post_user_mail,
             post_created_at,
@@ -84,7 +88,7 @@
     <select id="getTargetFeedList" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
         SELECT
             p.id,
-            p.title,
+            p.user_no,
             p.content AS post_content,
             p.user_mail AS post_user_mail,
             p.created_at AS post_created_at,
@@ -112,7 +116,7 @@
         WHERE p.user_mail = #{userMail}
         GROUP BY
             p.id,
-            p.title,
+            p.user_no,
             post_content,
             post_user_mail,
             post_created_at,
@@ -134,8 +138,8 @@
     </delete>
 
     <insert id="addPost" parameterType="map">
-        INSERT INTO demo_insta.posts (title, content, created_at, image_path, user_mail)
-        VALUES (#{title}, #{content}, now(), #{imagePath}, #{userMail})
+        INSERT INTO demo_insta.posts (content, created_at, image_path, user_mail, user_no)
+        VALUES (#{content}, now(), #{imagePath}, #{userMail}, #{userNo})
     </insert>
 
     <delete id="delPost" parameterType="map">
@@ -211,4 +215,9 @@
 <!--        WHERE follower_email = #{followerEmail}-->
 <!--          AND following_email = #{followingEmail};-->
 <!--    </delete>-->
+    <!-- Alim -->
+    <insert id="sendAlim">
+        INSERT INTO demo_insta.alims (my_mem_no, your_mem_no, alim_code, post_no)
+        VALUES (#{myMemNo}, #{yourMemNo}, #{alimCode}, #{postNo})
+    </insert>
 </mapper>

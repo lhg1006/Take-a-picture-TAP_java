@@ -1,11 +1,10 @@
 package com.example.demo.mapper.demoInsta;
 
+import com.example.demo.api.alim.vo.AlimInsVO;
+import com.example.demo.api.alim.vo.AlimVO;
+import com.example.demo.api.member.vo.*;
 import com.example.demo.api.newFeed.vo.CommentResultVO;
 import com.example.demo.api.newFeed.vo.FeedResultVO;
-import com.example.demo.api.member.vo.MemberFollowsVO;
-import com.example.demo.api.member.vo.MemberInsParamVO;
-import com.example.demo.api.member.vo.MemberDataVO;
-import com.example.demo.api.member.vo.MemberPostsVO;
 import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
 import com.example.demo.api.newFeed.vo.NewFeedVO;
@@ -19,7 +18,7 @@ public interface DemoInstaDataBase {
 
     int memberIns(MemberInsParamVO memberInsParamVO);
 
-    int memberAuth(Map<String,Object> param);
+    AuthVO memberAuth(Map<String,Object> param);
 
     int forgotPassword(@Param("email")String email, @Param("phone")String phone);
 
@@ -74,4 +73,10 @@ public interface DemoInstaDataBase {
     int getFollowerCnt (String email);
 
     int isFollowed (Map<String,Object> param);
+
+    //Alim
+    int sendAlim(AlimInsVO alimInsVO);
+
+    List<AlimVO> alimList(Map<String, Object> param);
+    //end Alim
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class NewFeedVO {
 
     private int id;
-    private String title;
+    private String postUserNo;
     private String postContent;
     private String postUserMail;
     private String postCreatedAt;
