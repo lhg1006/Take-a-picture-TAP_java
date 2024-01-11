@@ -77,6 +77,6 @@ public interface DemoInstaDataBase {
     //Alim
     int sendAlim(AlimInsVO alimInsVO);
 
-    List<AlimVO> alimList(Map<String, Object> param);
+    List<AlimVO> alimList(String memNo);
     //end Alim
 }

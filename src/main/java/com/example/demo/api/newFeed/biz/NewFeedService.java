@@ -37,7 +37,33 @@ public class NewFeedService {
 
 
     public int addComment(Map<String, Object> param){
-        return demoInstaDataBase.addComment(param);
+        int commentInsRes = 0;
+
+        if( ObjectUtils.isEmpty(param.get("sendMemNo")) || ObjectUtils.isEmpty(param.get("receiveMemNo")) ) {
+            return commentInsRes;
+        }
+
+        int myNo = Integer.parseInt(param.get("sendMemNo").toString()) ;
+        int yourNo = Integer.parseInt(param.get("receiveMemNo").toString());
+
+        int postNo = 0;
+
+        if( !ObjectUtils.isEmpty(param.get("postNo")) ){
+            postNo = Integer.parseInt(param.get("postNo").toString());
+        }
+
+        commentInsRes = demoInstaDataBase.addComment(param);
+
+        if(commentInsRes > 0 && (myNo != yourNo)){
+            AlimInsVO alimInsVO = new AlimInsVO();
+            alimInsVO.setSendMemNo(myNo);
+            alimInsVO.setReceiveMemNo(yourNo);
+            alimInsVO.setAlimCode(2);
+            alimInsVO.setPostNo(postNo);
+
+            alimService.sendAlim(alimInsVO);
+        }
+        return commentInsRes;
     }
 
     public int delComment(Map<String, Object> param){
@@ -72,8 +98,8 @@ public class NewFeedService {
 
         if(likeInsRes > 0 && (myNo != yourNo)){
             AlimInsVO alimInsVO = new AlimInsVO();
-            alimInsVO.setMyMemNo(myNo);
-            alimInsVO.setYourMemNo(yourNo);
+            alimInsVO.setSendMemNo(myNo);
+            alimInsVO.setReceiveMemNo(yourNo);
             alimInsVO.setAlimCode(1);
             alimInsVO.setPostNo(postNo);
 

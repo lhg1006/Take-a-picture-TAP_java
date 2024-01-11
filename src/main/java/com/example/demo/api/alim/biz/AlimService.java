@@ -31,10 +31,10 @@ public class AlimService {
         return result;
     }
 
-    public List<AlimVO> alimList(Map<String, Object> param){
+    public List<AlimVO> alimList(String memNo){
         List<AlimVO> alimVOList = new ArrayList<>();
         try {
-            alimVOList = demoInstaDataBase.alimList(param);
+            alimVOList = demoInstaDataBase.alimList(memNo);
         }catch (Exception e){
             log.error("AlimService alimList Error ===>>> {}", e);
         }

@@ -217,7 +217,14 @@
 <!--    </delete>-->
     <!-- Alim -->
     <insert id="sendAlim">
-        INSERT INTO demo_insta.alims (my_mem_no, your_mem_no, alim_code, post_no)
-        VALUES (#{myMemNo}, #{yourMemNo}, #{alimCode}, #{postNo})
+        INSERT INTO demo_insta.alims (send_mem_no, receive_mem_no, alim_code, post_no)
+        VALUES (#{sendMemNo}, #{receiveMemNo}, #{alimCode}, #{postNo})
     </insert>
+
+    <select id="alimList" parameterType="map" resultType="com.example.demo.api.alim.vo.AlimVO">
+        SELECT alims.*, member.name AS send_name, member.email AS send_email, member.profile_img AS send_profile_img
+        FROM alims
+        JOIN member ON alims.send_mem_no = member.member_no
+        WHERE alims.receive_mem_no = #{myMemNo}
+    </select>
 </mapper>
