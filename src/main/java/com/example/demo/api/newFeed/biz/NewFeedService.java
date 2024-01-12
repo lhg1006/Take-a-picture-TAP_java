@@ -53,8 +53,8 @@ public class NewFeedService {
 
         int postNo = 0;
 
-        if( !ObjectUtils.isEmpty(param.get("postNo")) ){
-            postNo = Integer.parseInt(param.get("postNo").toString());
+        if( !ObjectUtils.isEmpty(param.get("postId")) ){
+            postNo = Integer.parseInt(param.get("postId").toString());
         }
 
         commentInsRes = demoInstaDataBase.addComment(param);
@@ -138,10 +138,29 @@ public class NewFeedService {
     public int addFollow(Map<String, Object> param){
         int result = 0;
         try {
+            if( ObjectUtils.isEmpty(param.get("userMemNo")) || ObjectUtils.isEmpty(param.get("followMemNo")) ) {
+                return result;
+            }
+
+            int myNo = Integer.parseInt(param.get("userMemNo").toString()) ;
+            int yourNo = Integer.parseInt(param.get("followMemNo").toString());
+
+            int postNo = 0; // 팔로우는 그냥 0 넣음
+
             int chk = demoInstaDataBase.followCheck(param);
 
             if(chk == 0){
                 result = demoInstaDataBase.addFollow(param);
+            }
+
+            if(result > 0 && (myNo != yourNo)){
+                AlimInsVO alimInsVO = new AlimInsVO();
+                alimInsVO.setSendMemNo(myNo);
+                alimInsVO.setReceiveMemNo(yourNo);
+                alimInsVO.setAlimCode(3);
+                alimInsVO.setPostNo(postNo);
+
+                alimService.sendAlim(alimInsVO);
             }
         }catch (Exception e){
             log.error("NewFeedService addFollow ERROR ===> ",e);

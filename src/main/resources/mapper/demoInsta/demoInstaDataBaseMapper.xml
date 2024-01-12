@@ -253,11 +253,13 @@
         VALUES (#{followerEmail}, #{userEmail}, NOW())
     </insert>
 
-<!--    <delete id="delFollow">-->
-<!--        DELETE FROM follows-->
-<!--        WHERE follower_email = #{followerEmail}-->
-<!--          AND following_email = #{followingEmail};-->
-<!--    </delete>-->
+    <delete id="delFollow">
+        DELETE
+        FROM followers
+        WHERE user_email = #{userEmail}
+          AND follower_email = #{followerEmail}
+    </delete>
+
     <!-- Alim -->
     <insert id="sendAlim">
         INSERT INTO demo_insta.alims (send_mem_no, receive_mem_no, alim_code, post_no)
@@ -269,5 +271,6 @@
         FROM alims
         JOIN member ON alims.send_mem_no = member.member_no
         WHERE alims.receive_mem_no = #{myMemNo}
+        ORDER BY alims.ins_date DESC
     </select>
 </mapper>

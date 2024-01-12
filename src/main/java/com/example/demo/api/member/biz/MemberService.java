@@ -52,12 +52,13 @@ public class MemberService {
         try {
             AuthVO authVO = demoInstaDataBase.memberAuth(param);
 
-            if(authVO.getExistsFlag() == 1) {
+            if(authVO != null  && authVO.getExistsFlag() == 1) {
                 param.put("memberNo", authVO.getMemberNo());
                 cookieUtil.setCookie(httpServletResponse, param);
                 result = 1;
+            }else{
+                return result;
             }
-
         }catch (Exception e){
             log.error("MemberService loginAuth ERROR ===> ", e);
         }
