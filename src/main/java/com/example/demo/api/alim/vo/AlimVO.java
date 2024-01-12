@@ -18,9 +18,9 @@ public class AlimVO {
 
     public String getAlimCodeKor(){
         switch (this.alimCode){
-            case 1: return "회원님의 게시물을 좋아합니다<span class='font-red fw-bold'>♥</span>";
-            case 2: return "게시물에 댓글을 작성했습니다<span class='font-red fw-bold'>♥</span>";
-            case 3: return "회원님을 팔로우 하였습니다.";
+            case 1: return "회원님의 게시물을 좋아합니다";
+            case 2: return "게시물에 댓글을 작성했습니다";
+            case 3: return "회원님을 팔로우 하였습니다";
         }
         return "";
     }

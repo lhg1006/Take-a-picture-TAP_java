@@ -128,6 +128,49 @@
             post_created_at DESC;
     </select>
 
+    <select id="getSingleFeed" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
+        SELECT
+            p.id,
+            p.user_no,
+            p.content AS post_content,
+            p.user_mail AS post_user_mail,
+            p.created_at AS post_created_at,
+            p.image_path,
+            sub.comments,
+            sub.comment_count,
+            COUNT(l.post_id) AS like_count,
+            MAX(IF(l.user_mail = #{userMail}, 1, 0)) AS is_liked,
+            IF(m.profile_img IS NULL, '', m.profile_img) AS profile_img
+        FROM
+            demo_insta.posts AS p
+                LEFT JOIN (
+                SELECT
+                    post_id,
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', c.id, 'user_mail', c.user_mail, 'created_at', c.created_at, 'content', c.content, 'profile_img', IF(m.profile_img IS NULL, '', m.profile_img))), ']') AS comments,
+                    COUNT(*) AS comment_count
+                FROM
+                    demo_insta.comments AS c
+                        LEFT JOIN demo_insta.member AS m ON c.user_mail = m.email
+                GROUP BY
+                    post_id
+            ) AS sub ON p.id = sub.post_id
+                LEFT JOIN demo_insta.likes AS l ON p.id = l.post_id
+                LEFT JOIN demo_insta.member AS m ON p.user_mail = m.email
+        WHERE p.id  = #{postNo}
+        GROUP BY
+            p.id,
+            p.user_no,
+            post_content,
+            post_user_mail,
+            post_created_at,
+            image_path,
+            comments,
+            comment_count,
+            profile_img
+        ORDER BY
+            post_created_at DESC;
+    </select>
+
     <insert id="addComment" parameterType="map">
         INSERT INTO demo_insta.comments (post_id, content, created_at, user_mail)
         VALUES (#{postId}, #{content}, now(), #{userMail});

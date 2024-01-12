@@ -38,6 +38,8 @@ public interface DemoInstaDataBase {
 
     List<NewFeedVO> getTargetFeedList(String userMail);
 
+    NewFeedVO getSingleFeed(@Param("userMail") String userMail, @Param("postNo") int postNo);
+
     int addComment(Map<String,Object> param);
 
     int delComment(Map<String,Object> param);

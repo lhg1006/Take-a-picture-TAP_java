@@ -3,6 +3,7 @@ package com.example.demo.api.newFeed.act;
 import com.example.demo.api.newFeed.biz.NewFeedService;
 import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
+import com.example.demo.api.newFeed.vo.NewFeedVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,11 @@ public class NewFeedAction {
     @GetMapping("/list/target")
     public Map<String, Object> targetFeedList(@RequestParam("userMail") String userMail){
         return newFeedService.getTargetFeedList(userMail);
+    }
+
+    @GetMapping("/list/single")
+    public NewFeedVO singleFeed(@RequestParam("userMail") String userMail, @RequestParam("postNo") int postNo){
+        return newFeedService.getSingleFeed(userMail, postNo);
     }
 
     @PostMapping("/addComment")

@@ -4,6 +4,7 @@ import com.example.demo.api.alim.biz.AlimService;
 import com.example.demo.api.alim.vo.AlimInsVO;
 import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
+import com.example.demo.api.newFeed.vo.NewFeedVO;
 import com.example.demo.mapper.demoInsta.DemoInstaDataBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,10 @@ public class NewFeedService {
         Map<String, Object> resMap = new HashMap<>();
         resMap.put("postList", demoInstaDataBase.getTargetFeedList(userMail));
         return resMap;
+    }
+
+    public NewFeedVO getSingleFeed(String userMail, int postNo){
+        return demoInstaDataBase.getSingleFeed(userMail, postNo);
     }
 
 
