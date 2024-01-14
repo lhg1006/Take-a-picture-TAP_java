@@ -6,9 +6,11 @@ import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
 import com.example.demo.api.newFeed.vo.NewFeedVO;
 import com.example.demo.mapper.demoInsta.DemoInstaDataBase;
+import com.example.demo.mapper.demoInsta.ForTransaction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -22,6 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NewFeedService {
     private final DemoInstaDataBase demoInstaDataBase;
+    private final ForTransaction forTransaction;
     private final AlimService alimService;
 
     public Map<String, Object> getNewFeedList(String userMail){
@@ -79,8 +82,20 @@ public class NewFeedService {
         return demoInstaDataBase.addPost(param);
     }
 
+    @Transactional
     public int delPost(Map<String, Object> param){
-        return demoInstaDataBase.delPost(param);
+        try {
+            String postNo = (String) param.get("postNo");
+            String userMail = (String) param.get("userMail");
+            forTransaction.deletePost(postNo, userMail);
+            forTransaction.deleteLikes(postNo);
+            forTransaction.deleteComments(postNo);
+
+            return 1;
+        }catch (Exception e){
+            log.error("NewFeedService delPost ERROR ===> {}", e);
+            return 0;
+        }
     }
 
     public int likeIns(Map<String, Object> param){

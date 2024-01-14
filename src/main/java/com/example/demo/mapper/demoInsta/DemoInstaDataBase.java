@@ -46,8 +46,6 @@ public interface DemoInstaDataBase {
 
     int addPost(Map<String,Object> param);
 
-    int delPost(Map<String,Object> param);
-
     int likeIns(Map<String,Object> param);
 
     int likeDel(Map<String,Object> param);

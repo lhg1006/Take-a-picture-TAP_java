@@ -185,10 +185,6 @@
         VALUES (#{content}, now(), #{imagePath}, #{userMail}, #{userNo})
     </insert>
 
-    <delete id="delPost" parameterType="map">
-        delete from demo_insta.posts where id = #{postNo} AND user_mail = #{userMail}
-    </delete>
-
     <insert id="likeIns" parameterType="map">
         INSERT INTO demo_insta.likes(post_id, user_mail, created_at)
         VALUES (#{postNo}, #{userMail}, now())
