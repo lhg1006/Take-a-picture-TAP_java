@@ -40,7 +40,13 @@ public class NewFeedService {
     }
 
     public NewFeedVO getSingleFeed(String userMail, int postNo){
-        return demoInstaDataBase.getSingleFeed(userMail, postNo);
+        NewFeedVO singleFeed;
+        singleFeed = demoInstaDataBase.getSingleFeed(userMail, postNo);
+        if(singleFeed == null){
+            singleFeed = new NewFeedVO();
+            singleFeed.setPostState(-99);
+        }
+        return singleFeed;
     }
 
 

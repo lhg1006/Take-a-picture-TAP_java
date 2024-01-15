@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class NewFeedVO {
-
+    private int postState = 1;
     private int id;
     private String postUserNo;
     private String postContent;
