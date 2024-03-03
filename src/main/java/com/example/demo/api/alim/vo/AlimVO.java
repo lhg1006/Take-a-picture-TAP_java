@@ -1,9 +1,15 @@
 package com.example.demo.api.alim.vo;
 
+import com.example.demo.utils.DateFormatUtil;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @Data
+@RequiredArgsConstructor
 public class AlimVO {
+    private DateFormatUtil dateFormatUtil;
+
     private int autoNo;
     private int sendMemNo;
     private int receiveMemNo;
@@ -15,6 +21,7 @@ public class AlimVO {
     private String sendProfileImg;
 
     private String alimCodeKor;
+    private String insDateKor;
 
     public String getAlimCodeKor(){
         switch (this.alimCode){
