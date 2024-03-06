@@ -14,31 +14,31 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 @Configuration
-@MapperScan(value = "com.example.demo.mapper.demoInsta", sqlSessionFactoryRef = "demoInstaSqlSessionFactory")
+@MapperScan(value = "com.example.demo.mapper.tap", sqlSessionFactoryRef = "tapSqlSessionFactory")
 @EnableTransactionManagement
-public class DemoInstaDataBaseConfig {
-    @Bean(name="demoInstaDataSource")
-    @ConfigurationProperties(prefix = "spring.demoinsta.datasource")
+public class TapDataBaseConfig {
+    @Bean(name="tapDataSource")
+    @ConfigurationProperties(prefix = "spring.tap.datasource")
     public DataSource gguDataSource(){
         return DataSourceBuilder.create().build();
     }
 
 
-    @Bean(name="demoInstaSqlSessionFactory")
-    public SqlSessionFactory demoInstaSqlSessionFactory(@Qualifier("demoInstaDataSource")DataSource demoInstaDataSource,
+    @Bean(name="tapSqlSessionFactory")
+    public SqlSessionFactory tapSqlSessionFactory(@Qualifier("tapDataSource")DataSource tapDataSource,
                                                   ApplicationContext applicationContext) throws Exception{
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(demoInstaDataSource);
+        sqlSessionFactoryBean.setDataSource(tapDataSource);
         sqlSessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis-config.xml"));
-        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/demoInsta/*.xml"));
+        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/tap/*.xml"));
 
         return sqlSessionFactoryBean.getObject();
     }
 
 
-    @Bean(name="demoInstaSqlSessionTemplate")
-    public SqlSessionTemplate demoInstaSqlSessionTemplate(SqlSessionFactory demoInstaSqlSessionFactory) throws Exception{
-        return new SqlSessionTemplate(demoInstaSqlSessionFactory);
+    @Bean(name="tapSqlSessionTemplate")
+    public SqlSessionTemplate tapSqlSessionTemplate(SqlSessionFactory tapSqlSessionFactory) throws Exception{
+        return new SqlSessionTemplate(tapSqlSessionFactory);
     }
 }
 

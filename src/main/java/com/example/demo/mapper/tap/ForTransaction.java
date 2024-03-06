@@ -1,4 +1,4 @@
-package com.example.demo.mapper.demoInsta;
+package com.example.demo.mapper.tap;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;

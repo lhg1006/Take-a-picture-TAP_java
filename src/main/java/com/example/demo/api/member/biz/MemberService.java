@@ -2,7 +2,7 @@ package com.example.demo.api.member.biz;
 
 import com.example.demo.api.common.CookieUtil;
 import com.example.demo.api.member.vo.*;
-import com.example.demo.mapper.demoInsta.DemoInstaDataBase;
+import com.example.demo.mapper.tap.TapDataBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemberService {
     private final CookieUtil cookieUtil;
-    private final DemoInstaDataBase demoInstaDataBase;
+    private final TapDataBase TAPDataBase;
 
     public int memberIns(MemberInsParamVO memberInsParamVO){
         int result = 0;
@@ -27,7 +27,7 @@ public class MemberService {
             String password = memberInsParamVO.getPassword();
             String chkPassword = memberInsParamVO.getChkPassword();
             if(password.equals(chkPassword)){
-                result = demoInstaDataBase.memberIns(memberInsParamVO);
+                result = TAPDataBase.memberIns(memberInsParamVO);
             }else{
                 result = -2; // 비밀번호 불일치
             }
@@ -40,7 +40,7 @@ public class MemberService {
     public int emailChk(String email){
         int result = 0;
         try {
-            result = demoInstaDataBase.emailChk(email);
+            result = TAPDataBase.emailChk(email);
         }catch (Exception e){
             log.error("MemberService emailChk ERROR ===> ", e);
         }
@@ -50,7 +50,7 @@ public class MemberService {
     public int loginAuth(Map<String, Object> param, HttpServletResponse httpServletResponse){
         int result = 0;
         try {
-            AuthVO authVO = demoInstaDataBase.memberAuth(param);
+            AuthVO authVO = TAPDataBase.memberAuth(param);
 
             if(authVO != null  && authVO.getExistsFlag() == 1) {
                 param.put("memberNo", authVO.getMemberNo());
@@ -68,7 +68,7 @@ public class MemberService {
     public int forgotPassword(String email, String phone){
         int result = 0;
         try {
-            result = demoInstaDataBase.forgotPassword(email, phone);
+            result = TAPDataBase.forgotPassword(email, phone);
         }catch (Exception e){
             log.error("MemberService forgotPassword ERROR ===> ", e);
         }
@@ -78,7 +78,7 @@ public class MemberService {
     public int changePassword(Map<String,Object> param){
         int result = 0;
         try {
-            result = demoInstaDataBase.updPw(param);
+            result = TAPDataBase.updPw(param);
         }catch (Exception e){
             log.error("MemberService changePassword ERROR ===> ", e);
         }
@@ -98,7 +98,7 @@ public class MemberService {
     public int memberProfilePhotoIns(Map<String, Object> param){
         int result = 0;
         try {
-            result = demoInstaDataBase.memberProfilePhotoIns(param);
+            result = TAPDataBase.memberProfilePhotoIns(param);
         }catch (Exception e){
             log.error("MemberService memberProfilePhotoIns ERROR ===> ",e);
         }
@@ -108,7 +108,7 @@ public class MemberService {
     public MemberDataVO memberSelect(String email){
         MemberDataVO result = new MemberDataVO();
         try {
-            result = demoInstaDataBase.memberProfile(email);
+            result = TAPDataBase.memberProfile(email);
         }catch (Exception e){
             log.error("MemberService memberProfilePhotoIns ERROR ===> ",e);
         }
@@ -118,7 +118,7 @@ public class MemberService {
     public List<MemberPostsVO> memberPosts(String email){
         List<MemberPostsVO> result = new ArrayList<>();
         try {
-            result = demoInstaDataBase.memberPosts(email);
+            result = TAPDataBase.memberPosts(email);
         }catch (Exception e){
             log.error("MemberService memberPosts ERROR ===> ",e);
         }
@@ -128,7 +128,7 @@ public class MemberService {
     public List<MemberFollowsVO> memberFollows(String email){
         List<MemberFollowsVO> result = new ArrayList<>();
         try {
-            result = demoInstaDataBase.memberFollows(email);
+            result = TAPDataBase.memberFollows(email);
         }catch (Exception e){
             log.error("MemberService memberFollows ERROR ===> ", e);
         }
@@ -145,8 +145,8 @@ public class MemberService {
             int followCnt = 0;
             int followerCnt = 0;
             int postCnt = 0;
-            followCnt = demoInstaDataBase.getFollowCnt(email);
-            followerCnt = demoInstaDataBase.getFollowerCnt(email);
+            followCnt = TAPDataBase.getFollowCnt(email);
+            followerCnt = TAPDataBase.getFollowerCnt(email);
             postCnt = postList.size();
 
             resMap.put("followCnt", followCnt);

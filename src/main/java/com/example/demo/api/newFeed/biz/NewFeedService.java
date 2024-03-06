@@ -5,14 +5,13 @@ import com.example.demo.api.alim.vo.AlimInsVO;
 import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
 import com.example.demo.api.newFeed.vo.NewFeedVO;
-import com.example.demo.mapper.demoInsta.DemoInstaDataBase;
-import com.example.demo.mapper.demoInsta.ForTransaction;
+import com.example.demo.mapper.tap.TapDataBase;
+import com.example.demo.mapper.tap.ForTransaction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,25 +22,25 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class NewFeedService {
-    private final DemoInstaDataBase demoInstaDataBase;
+    private final TapDataBase TAPDataBase;
     private final ForTransaction forTransaction;
     private final AlimService alimService;
 
     public Map<String, Object> getNewFeedList(String userMail){
         Map<String, Object> resMap = new HashMap<>();
-        resMap.put("postList", demoInstaDataBase.getNewFeedList(userMail));
+        resMap.put("postList", TAPDataBase.getNewFeedList(userMail));
         return resMap;
     }
 
     public Map<String, Object> getTargetFeedList(String userMail){
         Map<String, Object> resMap = new HashMap<>();
-        resMap.put("postList", demoInstaDataBase.getTargetFeedList(userMail));
+        resMap.put("postList", TAPDataBase.getTargetFeedList(userMail));
         return resMap;
     }
 
     public NewFeedVO getSingleFeed(String userMail, int postNo){
         NewFeedVO singleFeed;
-        singleFeed = demoInstaDataBase.getSingleFeed(userMail, postNo);
+        singleFeed = TAPDataBase.getSingleFeed(userMail, postNo);
         if(singleFeed == null){
             singleFeed = new NewFeedVO();
             singleFeed.setPostState(-99);
@@ -66,7 +65,7 @@ public class NewFeedService {
             postNo = Integer.parseInt(param.get("postId").toString());
         }
 
-        commentInsRes = demoInstaDataBase.addComment(param);
+        commentInsRes = TAPDataBase.addComment(param);
 
         if(commentInsRes > 0 && (myNo != yourNo)){
             AlimInsVO alimInsVO = new AlimInsVO();
@@ -81,11 +80,11 @@ public class NewFeedService {
     }
 
     public int delComment(Map<String, Object> param){
-        return demoInstaDataBase.delComment(param);
+        return TAPDataBase.delComment(param);
     }
 
     public int addPost(Map<String, Object> param){
-        return demoInstaDataBase.addPost(param);
+        return TAPDataBase.addPost(param);
     }
 
     @Transactional
@@ -120,7 +119,7 @@ public class NewFeedService {
             postNo = Integer.parseInt(param.get("postNo").toString());
         }
 
-        likeInsRes = demoInstaDataBase.likeIns(param);
+        likeInsRes = TAPDataBase.likeIns(param);
 
         if(likeInsRes > 0 && (myNo != yourNo)){
             AlimInsVO alimInsVO = new AlimInsVO();
@@ -134,10 +133,10 @@ public class NewFeedService {
         return likeInsRes;
     }
     public int likeDel(Map<String, Object> param){
-        return demoInstaDataBase.likeDel(param);
+        return TAPDataBase.likeDel(param);
     }
     public List<LikeVO>getLikeList(int postNo){
-        List<LikeVO> list = demoInstaDataBase.likeList(postNo);
+        List<LikeVO> list = TAPDataBase.likeList(postNo);
         return list;
     }
 
@@ -146,9 +145,9 @@ public class NewFeedService {
         List<FollowsVO> list = new ArrayList<>();
         try {
             if(type.equals("follow")){
-                list = demoInstaDataBase.followList(email);
+                list = TAPDataBase.followList(email);
             }else{
-                list = demoInstaDataBase.followerList(email);
+                list = TAPDataBase.followerList(email);
             }
         }catch (Exception e){
             log.error("NewFeedService followList ERROR ===> ", e);
@@ -168,10 +167,10 @@ public class NewFeedService {
 
             int postNo = 0; // 팔로우는 그냥 0 넣음
 
-            int chk = demoInstaDataBase.followCheck(param);
+            int chk = TAPDataBase.followCheck(param);
 
             if(chk == 0){
-                result = demoInstaDataBase.addFollow(param);
+                result = TAPDataBase.addFollow(param);
             }
 
             if(result > 0 && (myNo != yourNo)){
@@ -192,7 +191,7 @@ public class NewFeedService {
     public int delFollow(Map<String, Object> param){
         int result = 0;
         try {
-            result = demoInstaDataBase.delFollow(param);
+            result = TAPDataBase.delFollow(param);
         }catch (Exception e){
             log.error("NewFeedService delFollow ERROR ===> ",e);
         }
@@ -200,6 +199,6 @@ public class NewFeedService {
     }
 
     public int isFollowed(Map<String, Object> param){
-        return demoInstaDataBase.isFollowed(param);
+        return TAPDataBase.isFollowed(param);
     }
 }

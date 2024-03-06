@@ -1,10 +1,8 @@
-package com.example.demo.mapper.demoInsta;
+package com.example.demo.mapper.tap;
 
 import com.example.demo.api.alim.vo.AlimInsVO;
 import com.example.demo.api.alim.vo.AlimVO;
 import com.example.demo.api.member.vo.*;
-import com.example.demo.api.newFeed.vo.CommentResultVO;
-import com.example.demo.api.newFeed.vo.FeedResultVO;
 import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
 import com.example.demo.api.newFeed.vo.NewFeedVO;
@@ -13,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 import java.util.Map;
 
-public interface DemoInstaDataBase {
+public interface TapDataBase {
     int emailChk(@Param("email") String email);
 
     int memberIns(MemberInsParamVO memberInsParamVO);
