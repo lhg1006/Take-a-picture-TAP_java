@@ -21,6 +21,7 @@ public class NewFeedVO {
     private int commentCount;
     private int likeCount;
     private int isLiked;
+    private String profileImg;
 
     public List<CommentsVO> getCommentsList(){
         if(!StringUtils.isEmpty(this.comments)){

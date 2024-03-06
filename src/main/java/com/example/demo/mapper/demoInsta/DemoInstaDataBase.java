@@ -24,15 +24,6 @@ public interface DemoInstaDataBase {
 
     int updPw(Map<String,Object> param);
 
-    List<FeedResultVO> getFeedList();
-
-    List<CommentResultVO> getCommentList();
-
-    int commentIns(CommentResultVO param);
-
-    int commentDel(CommentResultVO param);
-
-
     //여기서부터 뉴피드
     List<NewFeedVO> getNewFeedList(String userMail);
 

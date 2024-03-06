@@ -144,11 +144,14 @@ public class MemberService {
 
             int followCnt = 0;
             int followerCnt = 0;
+            int postCnt = 0;
             followCnt = demoInstaDataBase.getFollowCnt(email);
             followerCnt = demoInstaDataBase.getFollowerCnt(email);
+            postCnt = postList.size();
 
             resMap.put("followCnt", followCnt);
             resMap.put("followerCnt", followerCnt);
+            resMap.put("postCnt", postCnt);
 
             resMap.put("profile", memberSelectVO);
             resMap.put("posts", postList);
