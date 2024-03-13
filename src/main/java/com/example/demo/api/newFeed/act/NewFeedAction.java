@@ -4,6 +4,7 @@ import com.example.demo.api.newFeed.biz.NewFeedService;
 import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
 import com.example.demo.api.newFeed.vo.NewFeedVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +18,8 @@ public class NewFeedAction {
     private final NewFeedService newFeedService;
 
     @GetMapping("/list")
-    public Map<String, Object> newFeedList(@RequestParam("userMail") String userMail){
-        return newFeedService.getNewFeedList(userMail);
+    public Map<String, Object> newFeedList(@RequestParam("userMail") String userMail, @RequestParam("pageNo") int pageNo) throws JsonProcessingException {
+        return newFeedService.getNewFeedList(userMail, pageNo);
     }
 
     @GetMapping("/list/target")
@@ -27,7 +28,7 @@ public class NewFeedAction {
     }
 
     @GetMapping("/list/single")
-    public NewFeedVO singleFeed(@RequestParam("userMail") String userMail, @RequestParam("postNo") int postNo){
+    public NewFeedVO singleFeed(@RequestParam("userMail") String userMail, @RequestParam("postNo") int postNo) throws JsonProcessingException {
         return newFeedService.getSingleFeed(userMail, postNo);
     }
 

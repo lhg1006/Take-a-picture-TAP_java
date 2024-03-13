@@ -23,7 +23,8 @@ public interface TapDataBase {
     int updPw(Map<String,Object> param);
 
     //여기서부터 뉴피드
-    List<NewFeedVO> getNewFeedList(String userMail);
+    int getNewFeedTotalCnt();
+    List<NewFeedVO> getNewFeedList(Map<String,Object> param);
 
     List<NewFeedVO> getTargetFeedList(String userMail);
 

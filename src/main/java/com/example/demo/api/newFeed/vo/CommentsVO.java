@@ -9,6 +9,7 @@ public class CommentsVO {
     private String content;
     private String created_at;
     private String profile_img;
+    private String insDateKor;
 
     public String getCreated_at(){
         return this.created_at = this.created_at.replace(".000000", "");

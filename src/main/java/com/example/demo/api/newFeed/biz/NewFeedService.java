@@ -2,48 +2,73 @@ package com.example.demo.api.newFeed.biz;
 
 import com.example.demo.api.alim.biz.AlimService;
 import com.example.demo.api.alim.vo.AlimInsVO;
+import com.example.demo.api.newFeed.vo.CommentsVO;
 import com.example.demo.api.newFeed.vo.FollowsVO;
 import com.example.demo.api.newFeed.vo.LikeVO;
 import com.example.demo.api.newFeed.vo.NewFeedVO;
 import com.example.demo.mapper.tap.TapDataBase;
 import com.example.demo.mapper.tap.ForTransaction;
+import com.example.demo.utils.DateFormatUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class NewFeedService {
-    private final TapDataBase TAPDataBase;
+    private final TapDataBase tapDataBase;
     private final ForTransaction forTransaction;
     private final AlimService alimService;
+    private final DateFormatUtil dateFormatUtil;
 
-    public Map<String, Object> getNewFeedList(String userMail){
+    public Map<String, Object> getNewFeedList(String userMail, int pageNo) throws JsonProcessingException {
         Map<String, Object> resMap = new HashMap<>();
-        resMap.put("postList", TAPDataBase.getNewFeedList(userMail));
+        Map<String, Object> params = new HashMap<>();
+        params.put("userMail", userMail);
+        params.put("pagePerCnt", 10);
+        params.put("offset", 10 * (pageNo - 1));
+
+        int totalCnt = tapDataBase.getNewFeedTotalCnt();
+        boolean stopPaging = totalCnt <= pageNo * 2;
+
+        List<NewFeedVO> newFeedList = tapDataBase.getNewFeedList(params);
+
+        if(newFeedList != null){
+            for (NewFeedVO vo : newFeedList) {
+                if(vo.getComments() != null){
+                    setFeedCommentDateKor(vo);
+                }
+            }
+        }
+
+        resMap.put("totalCnt", totalCnt);
+        resMap.put("stopPaging", stopPaging);
+        resMap.put("postList", newFeedList);
+
         return resMap;
     }
 
     public Map<String, Object> getTargetFeedList(String userMail){
         Map<String, Object> resMap = new HashMap<>();
-        resMap.put("postList", TAPDataBase.getTargetFeedList(userMail));
+        resMap.put("postList", tapDataBase.getTargetFeedList(userMail));
         return resMap;
     }
 
-    public NewFeedVO getSingleFeed(String userMail, int postNo){
+    public NewFeedVO getSingleFeed(String userMail, int postNo) throws JsonProcessingException {
         NewFeedVO singleFeed;
-        singleFeed = TAPDataBase.getSingleFeed(userMail, postNo);
+        singleFeed = tapDataBase.getSingleFeed(userMail, postNo);
         if(singleFeed == null){
             singleFeed = new NewFeedVO();
             singleFeed.setPostState(-99);
+        }else{
+            setFeedCommentDateKor(singleFeed);
         }
         return singleFeed;
     }
@@ -65,7 +90,7 @@ public class NewFeedService {
             postNo = Integer.parseInt(param.get("postId").toString());
         }
 
-        commentInsRes = TAPDataBase.addComment(param);
+        commentInsRes = tapDataBase.addComment(param);
 
         if(commentInsRes > 0 && (myNo != yourNo)){
             AlimInsVO alimInsVO = new AlimInsVO();
@@ -80,11 +105,11 @@ public class NewFeedService {
     }
 
     public int delComment(Map<String, Object> param){
-        return TAPDataBase.delComment(param);
+        return tapDataBase.delComment(param);
     }
 
     public int addPost(Map<String, Object> param){
-        return TAPDataBase.addPost(param);
+        return tapDataBase.addPost(param);
     }
 
     @Transactional
@@ -119,7 +144,7 @@ public class NewFeedService {
             postNo = Integer.parseInt(param.get("postNo").toString());
         }
 
-        likeInsRes = TAPDataBase.likeIns(param);
+        likeInsRes = tapDataBase.likeIns(param);
 
         if(likeInsRes > 0 && (myNo != yourNo)){
             AlimInsVO alimInsVO = new AlimInsVO();
@@ -133,10 +158,10 @@ public class NewFeedService {
         return likeInsRes;
     }
     public int likeDel(Map<String, Object> param){
-        return TAPDataBase.likeDel(param);
+        return tapDataBase.likeDel(param);
     }
     public List<LikeVO>getLikeList(int postNo){
-        List<LikeVO> list = TAPDataBase.likeList(postNo);
+        List<LikeVO> list = tapDataBase.likeList(postNo);
         return list;
     }
 
@@ -145,9 +170,9 @@ public class NewFeedService {
         List<FollowsVO> list = new ArrayList<>();
         try {
             if(type.equals("follow")){
-                list = TAPDataBase.followList(email);
+                list = tapDataBase.followList(email);
             }else{
-                list = TAPDataBase.followerList(email);
+                list = tapDataBase.followerList(email);
             }
         }catch (Exception e){
             log.error("NewFeedService followList ERROR ===> ", e);
@@ -167,10 +192,10 @@ public class NewFeedService {
 
             int postNo = 0; // 팔로우는 그냥 0 넣음
 
-            int chk = TAPDataBase.followCheck(param);
+            int chk = tapDataBase.followCheck(param);
 
             if(chk == 0){
-                result = TAPDataBase.addFollow(param);
+                result = tapDataBase.addFollow(param);
             }
 
             if(result > 0 && (myNo != yourNo)){
@@ -191,7 +216,7 @@ public class NewFeedService {
     public int delFollow(Map<String, Object> param){
         int result = 0;
         try {
-            result = TAPDataBase.delFollow(param);
+            result = tapDataBase.delFollow(param);
         }catch (Exception e){
             log.error("NewFeedService delFollow ERROR ===> ",e);
         }
@@ -199,6 +224,28 @@ public class NewFeedService {
     }
 
     public int isFollowed(Map<String, Object> param){
-        return TAPDataBase.isFollowed(param);
+        return tapDataBase.isFollowed(param);
+    }
+
+    public void setFeedCommentDateKor(NewFeedVO list) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(list.getComments() != null){
+            // JSON 형식의 comments를 List로 변환
+            List<CommentsVO> commentList = objectMapper.readValue(list.getComments(), new TypeReference<List<CommentsVO>>(){});
+
+            // created_at 값을 insDateKor로 변환
+            for (CommentsVO comment : commentList) {
+                String insDateKor = dateFormatUtil.insDateKorea(comment.getCreated_at());
+                comment.setInsDateKor(insDateKor);
+            }
+            // 변환된 commentList를 다시 JSON 형식으로 변환하여 vo에 설정
+            try {
+                String updatedCommentsJson = objectMapper.writeValueAsString(commentList);
+                list.setComments(updatedCommentsJson);
+            } catch (JsonProcessingException e) {
+                log.error("NewFeedService setFeedCommentDateKor ERROR =====> {}", e);
+            }
+        }
     }
 }
+

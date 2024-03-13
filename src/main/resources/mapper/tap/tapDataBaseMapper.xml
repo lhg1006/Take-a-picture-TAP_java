@@ -43,6 +43,10 @@
         SELECT * FROM TAP.posts WHERE user_mail = #{email} ORDER BY created_at DESC;
     </select>
 
+    <select id="getNewFeedTotalCnt" resultType="int">
+            SELECT COUNT(*) FROM TAP.posts
+    </select>
+
     <select id="getNewFeedList" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
         SELECT
             p.id,
@@ -82,7 +86,8 @@
             comment_count,
             profile_img
         ORDER BY
-            post_created_at DESC;
+            post_created_at DESC
+        LIMIT #{pagePerCnt} OFFSET #{offset};
     </select>
 
     <select id="getTargetFeedList" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
@@ -131,7 +136,7 @@
     <select id="getSingleFeed" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
         SELECT
             p.id,
-            p.user_no,
+            p.user_no AS post_user_no,
             p.content AS post_content,
             p.user_mail AS post_user_mail,
             p.created_at AS post_created_at,
@@ -156,17 +161,8 @@
             ) AS sub ON p.id = sub.post_id
                 LEFT JOIN TAP.likes AS l ON p.id = l.post_id
                 LEFT JOIN TAP.member AS m ON p.user_mail = m.email
-        WHERE p.id  = #{postNo}
-        GROUP BY
-            p.id,
-            p.user_no,
-            post_content,
-            post_user_mail,
-            post_created_at,
-            image_path,
-            comments,
-            comment_count,
-            profile_img
+        WHERE
+            p.id = #{postNo}
         ORDER BY
             post_created_at DESC;
     </select>
