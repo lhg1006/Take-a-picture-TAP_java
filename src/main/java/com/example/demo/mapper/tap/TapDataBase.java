@@ -67,6 +67,6 @@ public interface TapDataBase {
     //Alim
     int sendAlim(AlimInsVO alimInsVO);
 
-    List<AlimVO> alimList(String memNo);
+    List<AlimVO> alimList(Map<String,Object> param);
     //end Alim
 }

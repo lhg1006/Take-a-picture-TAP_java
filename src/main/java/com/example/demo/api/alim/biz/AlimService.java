@@ -9,8 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -33,12 +32,17 @@ public class AlimService {
         return result;
     }
 
-    public List<AlimVO> alimList(String memNo){
-        List<AlimVO> alimVOList = new ArrayList<>();
+    public Map<String, Object> alimList(int memNo, int pageNo){
+        Map<String, Object> resMap = new HashMap<>();
         try {
-            alimVOList = TAPDataBase.alimList(memNo);
+            Map<String, Object> params = new HashMap<>();
+            params.put("memNo", memNo);
+            params.put("pagePerCnt", 20);
+            params.put("offset", 20 * (pageNo - 1));
+            List<AlimVO> alimVOList = TAPDataBase.alimList(params);
+            boolean stopPaging = false;
 
-            if(alimVOList != null){
+            if(alimVOList != null && alimVOList.size() > 0){
                 for (AlimVO alimVO : alimVOList) {
                     String insDate = alimVO.getInsDate();
                     if (!StringUtils.isEmpty(insDate)) {
@@ -46,11 +50,16 @@ public class AlimService {
                         alimVO.setInsDateKor(insDateKor);
                     }
                 }
+            }else{
+                stopPaging = true;
             }
+
+            resMap.put("alimList", alimVOList);
+            resMap.put("stopPaging", stopPaging);
 
         }catch (Exception e){
             log.error("AlimService alimList Error ===>>> {}", e);
         }
-        return alimVOList;
+        return resMap;
     }
 }

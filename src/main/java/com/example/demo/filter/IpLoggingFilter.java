@@ -28,7 +28,7 @@ public class IpLoggingFilter implements Filter {
         if (ipAddress == null || ipAddress.isEmpty()) {
             ipAddress = httpRequest.getRemoteAddr();
         }
-        if(!ipAddress.equals("127.0.0.1")){
+        if(!ipAddress.equals("192.168.0.201")){
             System.out.println("Request from IP: " + ipAddress);
         }
 

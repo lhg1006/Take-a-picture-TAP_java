@@ -64,7 +64,7 @@ public class NewFeedService {
     public NewFeedVO getSingleFeed(String userMail, int postNo) throws JsonProcessingException {
         NewFeedVO singleFeed;
         singleFeed = tapDataBase.getSingleFeed(userMail, postNo);
-        if(singleFeed == null){
+        if(singleFeed == null || singleFeed.getId() < 1){
             singleFeed = new NewFeedVO();
             singleFeed.setPostState(-99);
         }else{

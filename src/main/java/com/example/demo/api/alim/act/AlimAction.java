@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class AlimAction {
     }
 
     @GetMapping("/list")
-    public List<AlimVO> alimList(@RequestParam("myMemNo") String memNo){
-        return alimService.alimList(memNo);
+    public Map<String, Object> alimList(@RequestParam("myMemNo") int memNo, @RequestParam("pageNo") int pageNo){
+        return alimService.alimList(memNo, pageNo);
     }
 }
