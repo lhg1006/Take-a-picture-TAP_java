@@ -36,7 +36,7 @@ public class NewFeedService {
         params.put("offset", 10 * (pageNo - 1));
 
         int totalCnt = tapDataBase.getNewFeedTotalCnt();
-        boolean stopPaging = totalCnt <= pageNo * 2;
+        boolean stopPaging = totalCnt <= pageNo * 10;
 
         List<NewFeedVO> newFeedList = tapDataBase.getNewFeedList(params);
 
