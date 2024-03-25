@@ -1,6 +1,6 @@
 package com.example.demo.api.member.biz;
 
-import com.example.demo.api.common.CookieUtil;
+import com.example.demo.utils.CookieUtil;
 import com.example.demo.api.member.vo.*;
 import com.example.demo.mapper.tap.TapDataBase;
 import lombok.RequiredArgsConstructor;

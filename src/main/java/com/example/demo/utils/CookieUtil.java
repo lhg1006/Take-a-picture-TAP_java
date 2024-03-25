@@ -1,13 +1,13 @@
-package com.example.demo.api.common;
+package com.example.demo.utils;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-@Service
+@Component
 public class CookieUtil {
 
     public void setCookie(HttpServletResponse res, Map<String,Object> param){
