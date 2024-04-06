@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**") // 엔드포인트 패턴을 필요에 따라 조정
-                .allowedOriginPatterns("http://localhost:3000", "http://192.168.0.201:3000", "http://52.79.91.178:4000") // 클라이언트 도메인
+                .allowedOriginPatterns("http://localhost:3000", "http://192.168.0.201:3000", "http://13.209.62.108:4000") // 클라이언트 도메인
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("Content-Type", "Authorization")
                 .allowCredentials(true);
