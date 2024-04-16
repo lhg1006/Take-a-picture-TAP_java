@@ -65,7 +65,7 @@
                 LEFT JOIN (
                 SELECT
                     post_id,
-                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', c.id, 'user_mail', c.user_mail, 'created_at', c.created_at, 'content', c.content, 'profile_img', IF(m.profile_img IS NULL, '', m.profile_img))), ']') AS comments,
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', c.id, 'user_mail', c.user_mail, 'created_at', c.created_at, 'content', c.content, 'profile_img', IF(m.profile_img IS NULL, '', m.profile_img)) ORDER BY c.created_at ASC ), ']') AS comments,
                     COUNT(*) AS comment_count
                 FROM
                     TAP.comments AS c
@@ -93,7 +93,7 @@
     <select id="getTargetFeedList" parameterType="map" resultType="com.example.demo.api.newFeed.vo.NewFeedVO">
         SELECT
             p.id,
-            p.user_no,
+            p.user_no AS post_user_no,
             p.content AS post_content,
             p.user_mail AS post_user_mail,
             p.created_at AS post_created_at,
@@ -108,7 +108,7 @@
                 LEFT JOIN (
                 SELECT
                     post_id,
-                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', c.id, 'user_mail', c.user_mail, 'created_at', c.created_at, 'content', c.content, 'profile_img', IF(m.profile_img IS NULL, '', m.profile_img))), ']') AS comments,
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', c.id, 'user_mail', c.user_mail, 'created_at', c.created_at, 'content', c.content, 'profile_img', IF(m.profile_img IS NULL, '', m.profile_img))  ORDER BY c.created_at ASC ), ']') AS comments,
                     COUNT(*) AS comment_count
                 FROM
                     TAP.comments AS c
@@ -151,7 +151,7 @@
                 LEFT JOIN (
                 SELECT
                     post_id,
-                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', c.id, 'user_mail', c.user_mail, 'created_at', c.created_at, 'content', c.content, 'profile_img', IF(m.profile_img IS NULL, '', m.profile_img))), ']') AS comments,
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', c.id, 'user_mail', c.user_mail, 'created_at', c.created_at, 'content', c.content, 'profile_img', IF(m.profile_img IS NULL, '', m.profile_img)) ORDER BY c.created_at ASC ), ']') AS comments,
                     COUNT(*) AS comment_count
                 FROM
                     TAP.comments AS c
